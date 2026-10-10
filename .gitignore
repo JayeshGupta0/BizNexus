@@ -1,0 +1,71 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+.pnp
+.pnp.js
+
+# Production builds
+dist/
+frontend/dist/
+build/
+frontend/build/
+.cache/
+frontend/.cache/
+
+# Python
+__pycache__/
+backend/__pycache__/
+backend/app/__pycache__/
+backend/app/**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment Variables & Secrets
+.env
+.env*
+!.env.example
+*.local
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Vite
+.vite/
+frontend/.vite/
+vite.config.*.timestamp-*
+frontend/vite.config.*.timestamp-*
+*.tsbuildinfo
+frontend/*.tsbuildinfo
+
+# Tooling / Scratch
+.opencode/
+.claude-replay.*
+.tmp-*
+scratch/
+
+# Documents & PDFs
+*.pdf
+

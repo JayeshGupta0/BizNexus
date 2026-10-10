@@ -1,0 +1,10 @@
+{
+  "description": "Create stunning business websites effortlessly with a user-friendly platform designed for entrepreneurs, offering modern and classic templates for every need.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
