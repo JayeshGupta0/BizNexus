@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { flushSync } from 'react-dom';
 import { useNavigate, Link } from 'react-router';
 import {
   Building2,
@@ -117,21 +118,11 @@ const MODULE_OPTIONS = [
 
 export default function Register() {
   const navigate = useNavigate();
-  const { registerCompany, isLoggedIn } = useApp();
+  const { registerCompany } = useApp();
 
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4>(1);
   const [submitting, setSubmitting] = useState(false);
-  const [registrationPending, setRegistrationPending] = useState(false);
   const [uploadMockStatus, setUploadMockStatus] = useState<string>('GST_Certificate_2024.pdf');
-
-  // Navigate to dashboard only AFTER React commits isLoggedIn = true
-  // Using useEffect avoids the async state timing race where navigate fires
-  // before AppContext's setIsLoggedIn(true) has been applied.
-  useEffect(() => {
-    if (registrationPending && isLoggedIn) {
-      navigate('/dashboard', { replace: true });
-    }
-  }, [registrationPending, isLoggedIn, navigate]);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -288,11 +279,14 @@ export default function Register() {
       createdAt: new Date().toISOString(),
     };
 
-    // registerCompany internally calls setIsLoggedIn(true), but React batches
-    // state updates — navigate() must wait for the commit via useEffect above.
-    registerCompany(profile);
+    // flushSync forces React to commit ALL state updates inside registerCompany
+    // (setCompany, setCurrentUser, setIsLoggedIn) synchronously before navigate()
+    // fires — so AppLayout sees isLoggedIn=true on the very first render.
+    flushSync(() => {
+      registerCompany(profile);
+    });
     setSubmitting(false);
-    setRegistrationPending(true); // triggers useEffect once isLoggedIn commits
+    navigate('/dashboard', { replace: true });
   };
 
   return (
