@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router';
 import {
   Building2,
@@ -117,11 +117,21 @@ const MODULE_OPTIONS = [
 
 export default function Register() {
   const navigate = useNavigate();
-  const { registerCompany } = useApp();
+  const { registerCompany, isLoggedIn } = useApp();
 
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4>(1);
   const [submitting, setSubmitting] = useState(false);
+  const [registrationPending, setRegistrationPending] = useState(false);
   const [uploadMockStatus, setUploadMockStatus] = useState<string>('GST_Certificate_2024.pdf');
+
+  // Navigate to dashboard only AFTER React commits isLoggedIn = true
+  // Using useEffect avoids the async state timing race where navigate fires
+  // before AppContext's setIsLoggedIn(true) has been applied.
+  useEffect(() => {
+    if (registrationPending && isLoggedIn) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [registrationPending, isLoggedIn, navigate]);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -242,7 +252,7 @@ export default function Register() {
     if (!validateStep(4)) return;
 
     setSubmitting(true);
-    // Simulate enterprise tenant provisioning
+    // Simulate enterprise tenant provisioning delay
     await new Promise((r) => setTimeout(r, 1200));
 
     const tenantSlug = formData.companyName
@@ -278,9 +288,11 @@ export default function Register() {
       createdAt: new Date().toISOString(),
     };
 
+    // registerCompany internally calls setIsLoggedIn(true), but React batches
+    // state updates — navigate() must wait for the commit via useEffect above.
     registerCompany(profile);
     setSubmitting(false);
-    navigate('/dashboard');
+    setRegistrationPending(true); // triggers useEffect once isLoggedIn commits
   };
 
   return (
