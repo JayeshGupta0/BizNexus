@@ -13,7 +13,7 @@ export default function AppLayout() {
   if (!isLoggedIn) return <Navigate to="/login" replace />;
 
   return (
-    <div className="flex h-full w-full overflow-hidden relative" style={{ background: '#f1f5f9' }}>
+    <div className="flex h-full w-full overflow-hidden relative" style={{ background: '#F5F0E8' }}>
       {/* Left Navigation Sidebar */}
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 

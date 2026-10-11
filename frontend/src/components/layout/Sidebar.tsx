@@ -142,7 +142,7 @@ export default function Sidebar({ open, onClose }: { open?: boolean; onClose?: (
             if (!visible.length) return null;
             return (
               <div key={group.group} className="mb-1">
-                <div className="px-3 py-1.5 text-xs font-semibold tracking-wider" style={{ color: '#475569' }}>
+                <div className="px-3 py-1.5 text-[10px] font-bold tracking-[0.12em] uppercase" style={{ color: '#6B3F22' }}>
                   {group.group}
                 </div>
                 {visible.map(item => (
@@ -150,17 +150,17 @@ export default function Sidebar({ open, onClose }: { open?: boolean; onClose?: (
                     key={item.path}
                     to={item.path}
                     onClick={onClose}
-                    className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm mb-0.5 transition-colors
+                    className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm mb-0.5 transition-all duration-150
                       ${isActive(item.path)
-                        ? 'bg-blue-600 text-white font-medium'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                        ? 'bg-gradient-to-r from-[#D97706]/20 to-[#EA580C]/10 text-amber-300 font-semibold border border-amber-500/20'
+                        : 'text-stone-400 hover:bg-white/[0.05] hover:text-stone-200'
                       }
                     `}
                   >
-                    {item.icon}
+                    <span className={isActive(item.path) ? 'text-amber-400' : 'text-stone-500'}>{item.icon}</span>
                     {item.label}
                     {item.module === 'ai-assistant' && (
-                      <span className="ml-auto text-xs px-1.5 py-0.5 rounded-full font-medium" style={{ background: '#7c3aed', color: '#ede9fe' }}>AI</span>
+                      <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full font-bold" style={{ background: '#78350F', color: '#FCD34D' }}>AI</span>
                     )}
                   </Link>
                 ))}
