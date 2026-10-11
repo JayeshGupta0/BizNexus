@@ -130,7 +130,15 @@ flowchart TB
 - **RAG Architecture Visualization**: Interactive visual breakdown of the document ingestion pipeline (Upload → Extraction → Chunking → Embeddings → Vector Database → Semantic Retrieval).
 - **BizNexus AI Assistant**: Grounded natural language query engine that quotes exact document excerpts and database records with interactive citations.
 
-### 7. 🔌 Full-Stack Integration & Proxy Architecture
+### 7. 🏢 Self-Service Enterprise Registration & Demo Authentication
+- **Streamlined 3-Step Onboarding (`/register`)**:
+  1. *Owner Identity*: Root executive designation, full name, business email, direct phone, and workspace credentials.
+  2. *Corporate Entity*: Legal company name, trading DBA, industry sector, company headcount, website, and operating address.
+  3. *Authenticity & Statutory Proofs*: GSTIN, Corporate PAN, CIN / RoC, incorporation date, statutory document uploads, and affirmative compliance declaration.
+- **Automated Tenant Provisioning**: Instantly initializes isolated tenant ID, generates executive and staff accounts for all departments, and launches straight into the enterprise dashboard.
+- **Enterprise Demo Login (`/login`)**: Quick-switch demo authentication into all 8 corporate personas or newly registered workspaces.
+
+### 8. 🔌 Full-Stack Integration & Proxy Architecture
 - **Vite Reverse Proxy**: Configured under `http://localhost:8443/` forwarding `/api`, `/docs`, and `/openapi.json` to FastAPI backend running on port 8000.
 - **FastAPI Endpoints**:
   - `/api/health` — Service readiness probe
@@ -146,7 +154,7 @@ flowchart TB
 ## 🎯 Upcoming Scopes & Roadmap
 
 ```
-[Phase 1: Persistent DB & Auth] ──> [Phase 2: Self-Serve Onboarding] ──> [Phase 3: Production RAG & pgvector] ──> [Phase 4: Integrations] ──> [Phase 5: Cloud Deployment]
+[Phase 1: Persistent DB & Auth] ──> [Phase 2: Self-Serve Onboarding ✓] ──> [Phase 3: Production RAG & pgvector] ──> [Phase 4: Integrations] ──> [Phase 5: Cloud Deployment]
 ```
 
 ### Phase 1: Real Database Persistence & Supabase Auth 🗄️
@@ -155,8 +163,8 @@ flowchart TB
 - [ ] **Production Authentication**: Implement secure JWT authentication, session refresh tokens, password hashing (Argon2/bcrypt), and magic link verification.
 
 ### Phase 2: Tenant Self-Service Onboarding & Organization Provisioning 🏢
-- [ ] **Sign-Up & Workspace Wizard (`/signup`)**: Interactive flow for new companies to register their organization, select their commercial domain slug, and designate the initial Owner.
-- [ ] **Modular Provisioning**: Allow companies to toggle specific modules on/off (e.g., Enable CRM & Inventory while disabling Marketing Campaigns).
+- [x] **Sign-Up & Workspace Wizard (`/register`)**: Streamlined 3-step enterprise registration (Owner, Entity, Authenticity) with automated multi-tenant isolation.
+- [x] **Demo Authentication (`/login`)**: Instant access to all pre-configured role personas and newly created workspaces.
 - [ ] **Team Invitations**: Generate one-time invite tokens allowing administrators to invite employees with predefined RBAC roles.
 
 ### Phase 3: Production Vector Pipeline & Hybrid Search 🔍
@@ -188,11 +196,13 @@ BizNexus/
 │   ├── src/
 │   │   ├── components/           # Reusable UI cards, tables, topbar & navigation
 │   │   ├── context/
-│   │   │   └── AppContext.tsx    # Role switching & RBAC state provider
+│   │   │   └── AppContext.tsx    # Role switching, multi-tenant state & RBAC provider
 │   │   ├── data/
 │   │   │   └── mockData.ts       # Comprehensive enterprise mock datasets
 │   │   ├── pages/                # 24 Functional & Visual Pages
 │   │   │   ├── Landing.tsx       # Scroll-snap executive landing page & dynamic dock
+│   │   │   ├── Register.tsx      # 3-step enterprise organization onboarding
+│   │   │   ├── Login.tsx         # Enterprise demo login & role persona switcher
 │   │   │   ├── Dashboard.tsx     # Role-adaptive KPI dashboard
 │   │   │   ├── LeadsPipeline.tsx # Leads Kanban board & table
 │   │   │   ├── LeadDetail.tsx    # Lead 360° detail view
