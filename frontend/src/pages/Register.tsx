@@ -120,7 +120,7 @@ export default function Register() {
   const navigate = useNavigate();
   const { registerCompany } = useApp();
 
-  const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4>(1);
+  const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
   const [submitting, setSubmitting] = useState(false);
   const [uploadMockStatus, setUploadMockStatus] = useState<string>('GST_Certificate_2024.pdf');
 
@@ -200,8 +200,6 @@ export default function Register() {
       if (!formData.gstin.trim() || formData.gstin.length < 10) errs.gstin = 'Valid GSTIN number is required';
       if (!formData.panNumber.trim() || formData.panNumber.length < 10) errs.panNumber = 'Valid corporate PAN is required';
       if (!formData.complianceCheck) errs.complianceCheck = 'Please verify organization authenticity';
-    } else if (step === 4) {
-      if (formData.enabledRoles.length === 0) errs.enabledRoles = 'Select at least one role for your portal';
     }
     setErrors(errs);
     return Object.keys(errs).length === 0;
@@ -209,7 +207,7 @@ export default function Register() {
 
   const handleNext = () => {
     if (validateStep(currentStep)) {
-      setCurrentStep((prev) => Math.min(prev + 1, 4) as any);
+      setCurrentStep((prev) => Math.min(prev + 1, 3) as any);
     }
   };
 
@@ -242,7 +240,7 @@ export default function Register() {
   // the auto-submit bug where clicking 'Continue to Step 4' re-renders the
   // button as type='submit' in the same DOM slot, causing a spurious submit.
   const doRegister = async () => {
-    if (!validateStep(4)) return;
+    if (!validateStep(3)) return;
 
     setSubmitting(true);
     // Simulate enterprise tenant provisioning delay
@@ -332,7 +330,6 @@ export default function Register() {
               { num: 1, title: 'Owner Identity', desc: 'Designate company executive & credentials' },
               { num: 2, title: 'Commercial Entity', desc: 'Operating address & industry profile' },
               { num: 3, title: 'Authenticity & Tax', desc: 'GSTIN, PAN & registration proofs' },
-              { num: 4, title: 'Portal Roles & Modules', desc: 'Select employee portals & permissions' },
             ].map((step) => {
               const isActive = currentStep === step.num;
               const isPast = currentStep > step.num;
@@ -386,7 +383,7 @@ export default function Register() {
             <span className="font-bold font-display text-base text-[#1F130B]">BizNexus</span>
           </Link>
           <div className="text-xs font-semibold text-[#5C3A21]">
-            Step {currentStep} of 4
+            Step {currentStep} of 3
           </div>
         </div>
 
@@ -409,7 +406,7 @@ export default function Register() {
 
           {/* Stepper Pills on Mobile/Tablet */}
           <div className="flex items-center justify-between gap-2 mb-8 lg:hidden">
-            {[1, 2, 3, 4].map((step) => (
+            {[1, 2, 3].map((step) => (
               <div
                 key={step}
                 className={`h-1.5 flex-1 rounded-full transition-all ${
@@ -828,120 +825,7 @@ export default function Register() {
                   </label>
                   {errors.complianceCheck && <p className="text-xs text-red-600 mt-2">{errors.complianceCheck}</p>}
                 </div>
-              </div>
-            )}
-
-            {/* ════ STEP 4: SELECTION OF PORTAL ROLES & MODULES ════ */}
-            {currentStep === 4 && (
-              <div className="space-y-6 animate-fade-in">
-                <div>
-                  <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#D97706] mb-1">
-                    <Layers3 size={14} /> Step 4: Organization Roles & Portal Capabilities
-                  </div>
-                  <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-[#1F130B]">
-                    Configure Roles for Your Portal
-                  </h2>
-                  <p className="text-[#5C3A21]/80 text-sm mt-1">
-                    Select which employee roles you want enabled in your company's workspace. Pre-configured staff accounts will be provisioned so you can demo and switch between them immediately.
-                  </p>
-                </div>
-
-                {/* Role Selection Grid */}
-                <div>
-                  <div className="flex items-center justify-between mb-2.5">
-                    <label className="text-xs font-bold uppercase tracking-wider text-[#5C3A21]">
-                      Select Active Enterprise Roles ({formData.enabledRoles.length} Selected)
-                    </label>
-                    <span className="text-[11px] text-stone-500">
-                      Click to toggle roles on/off
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-72 overflow-y-auto pr-1">
-                    {AVAILABLE_PORTAL_ROLES.map((r) => {
-                      const isSelected = formData.enabledRoles.includes(r.role);
-                      const isOwner = r.role === 'Business Owner';
-                      return (
-                        <div
-                          key={r.role}
-                          onClick={() => toggleRole(r.role)}
-                          className={`p-3.5 rounded-2xl border transition-all cursor-pointer ${
-                            isSelected
-                              ? 'bg-white border-[#EA580C] shadow-sm ring-1 ring-[#EA580C]/20'
-                              : 'bg-white/60 border-stone-200 hover:border-stone-300 opacity-60'
-                          }`}
-                        >
-                          <div className="flex items-start justify-between">
-                            <div className="flex items-center gap-2">
-                              <div
-                                className={`w-6 h-6 rounded-lg flex items-center justify-center text-xs font-bold ${
-                                  isSelected
-                                    ? 'bg-[#EA580C] text-white'
-                                    : 'bg-stone-200 text-stone-600'
-                                }`}
-                              >
-                                {isSelected ? <Check size={14} /> : '+'}
-                              </div>
-                              <div>
-                                <div className="text-xs font-bold text-[#1F130B]">{r.role}</div>
-                                <div className="text-[10px] text-stone-500">{r.department}</div>
-                              </div>
-                            </div>
-                            <span
-                              className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
-                                isOwner
-                                  ? 'bg-amber-100 text-amber-800'
-                                  : isSelected
-                                  ? 'bg-orange-100 text-orange-800'
-                                  : 'bg-stone-100 text-stone-500'
-                              }`}
-                            >
-                              {r.badge}
-                            </span>
-                          </div>
-                          <p className="text-[11px] text-[#5C3A21]/80 mt-2 line-clamp-2 leading-tight">
-                            {r.desc}
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Commercial Modules Enablement */}
-                <div>
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#5C3A21] block mb-2">
-                    Commercial Modules Provisioned ({formData.selectedModules.length} Active)
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {MODULE_OPTIONS.map((m) => {
-                      const isModActive = formData.selectedModules.includes(m.id);
-                      return (
-                        <button
-                          key={m.id}
-                          type="button"
-                          onClick={() => toggleModule(m.id)}
-                          className={`flex items-center gap-2 px-3 py-2 rounded-xl text-left text-xs transition-all border ${
-                            isModActive
-                              ? 'bg-white border-amber-300 font-semibold text-[#1F130B] shadow-2xs'
-                              : 'bg-stone-100/60 border-transparent text-stone-400'
-                          }`}
-                        >
-                          <div
-                            className={`w-3.5 h-3.5 rounded-md flex items-center justify-center text-[10px] ${
-                              isModActive ? 'bg-[#D97706] text-white' : 'bg-stone-300'
-                            }`}
-                          >
-                            {isModActive ? '✓' : ''}
-                          </div>
-                          <span className="truncate">{m.name}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Final Confirmation Banner */}
+                {/* Final Confirmation & Launch Banner */}
                 <div className="p-4 rounded-2xl bg-gradient-to-r from-[#78350F]/10 via-[#D97706]/10 to-[#EA580C]/10 border border-[#D97706]/30">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#D97706] to-[#EA580C] text-white flex items-center justify-center shrink-0">
@@ -952,7 +836,7 @@ export default function Register() {
                         Ready to launch {formData.companyName || 'your business'}
                       </div>
                       <div className="text-[11px] text-[#5C3A21]/80 mt-0.5">
-                        Your workspace will be initialized with tenant ID <span className="font-mono font-bold text-amber-800">tenant-{formData.companyName.toLowerCase().slice(0, 10).replace(/[^a-z0-9]/g, '')}</span>. You can switch between all selected roles in the topbar or sidebar immediately.
+                        Your workspace will be provisioned with tenant ID <span className="font-mono font-bold text-amber-800">tenant-{formData.companyName.toLowerCase().slice(0, 10).replace(/[^a-z0-9]/g, '')}</span>. Pre-configured staff accounts and modules are enabled so you can switch roles immediately.
                       </div>
                     </div>
                   </div>
@@ -974,7 +858,7 @@ export default function Register() {
                 <div />
               )}
 
-              {currentStep < 4 ? (
+              {currentStep < 3 ? (
                 <button
                   type="button"
                   onClick={handleNext}
