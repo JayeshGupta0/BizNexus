@@ -42,7 +42,7 @@ const ROLE_COLORS: Record<string, string> = {
 };
 
 export default function UsersRoles() {
-  const { hasModule, currentUser, userOverrides, setUserOverride } = useApp();
+  const { hasModule, currentUser, userOverrides, setUserOverride, availableUsers } = useApp();
   const [activeTab, setActiveTab] = useState<Tab>('Users');
   const [selectedRole, setSelectedRole] = useState<string>('Sales Executive');
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
@@ -51,12 +51,13 @@ export default function UsersRoles() {
 
   if (!hasModule('users-roles')) return <AccessDenied />;
 
-  const selectedUserObj = demoUsers.find(u => u.id === selectedUser);
+  const userList = availableUsers && availableUsers.length > 0 ? availableUsers : demoUsers;
+  const selectedUserObj = userList.find(u => u.id === selectedUser);
   const rolePerm = DEFAULT_ROLE_PERMISSIONS[selectedUserObj?.role ?? 'Sales Executive'] ?? {};
   const overrides = selectedUser ? (userOverrides[selectedUser] ?? []) : [];
 
   const effectivePermission = (userId: string, module: string, perm: Permission): boolean => {
-    const user = demoUsers.find(u => u.id === userId);
+    const user = userList.find(u => u.id === userId);
     if (!user) return false;
     const base = DEFAULT_ROLE_PERMISSIONS[user.role]?.[module]?.[perm] ?? false;
     const override = (userOverrides[userId] ?? []).find(o => o.module === module && o.permission === perm);
@@ -76,7 +77,7 @@ export default function UsersRoles() {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <KPICard title="Active Users" value={`${demoUsers.length}`} accent="#2563eb" />
+        <KPICard title="Active Users" value={`${userList.length}`} accent="#2563eb" />
         <KPICard title="Roles" value={`${ROLES.length}`} accent="#7c3aed" />
         <KPICard title="Custom Overrides" value={`${Object.values(userOverrides).flat().length}`} accent="#f59e0b" />
         <KPICard title="Pending Invites" value="0" accent="#16a34a" />
@@ -102,7 +103,7 @@ export default function UsersRoles() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
-                {demoUsers.map(user => {
+                {userList.map(user => {
                   const modules = ROLE_MODULES[user.role] ?? [];
                   const isExpanded = expandedUser === user.id;
                   return (
@@ -240,7 +241,7 @@ export default function UsersRoles() {
       {activeTab === 'Roles' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4">
           {ROLES.map(role => {
-            const users = demoUsers.filter(u => u.role === role);
+            const users = userList.filter(u => u.role === role);
             const modules = ROLE_MODULES[role as keyof typeof ROLE_MODULES] ?? [];
             return (
               <div key={role} className="bg-white rounded-xl border border-slate-200 p-5 hover:border-blue-200 transition-colors">

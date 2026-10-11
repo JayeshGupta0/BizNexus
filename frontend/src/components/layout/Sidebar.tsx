@@ -90,7 +90,7 @@ const NAV_GROUPS: NavGroup[] = [
 
 export default function Sidebar({ open, onClose }: { open?: boolean; onClose?: () => void }) {
   const location = useLocation();
-  const { currentUser, setCurrentUser, hasModule } = useApp();
+  const { currentUser, setCurrentUser, hasModule, availableUsers, company } = useApp();
   const [roleOpen, setRoleOpen] = useState(false);
 
   const isActive = (path: string) =>
@@ -113,18 +113,22 @@ export default function Sidebar({ open, onClose }: { open?: boolean; onClose?: (
           lg:relative lg:translate-x-0
           ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
-        style={{ background: '#0f172a' }}
+        style={{ background: '#120904' }}
       >
         {/* Logo */}
         <div className="flex items-center gap-3 px-5 py-5 border-b border-white/10">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center font-display font-bold text-white text-sm" style={{ background: '#2563eb' }}>
-            B
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center font-display font-bold text-white text-sm bg-gradient-to-br from-[#D97706] to-[#EA580C] shadow-md shadow-orange-950/40">
+            {company.companyName ? company.companyName.charAt(0).toUpperCase() : 'B'}
           </div>
-          <div>
-            <div className="font-display font-bold text-white text-base leading-none">BizNexuz</div>
-            <div className="text-xs mt-0.5" style={{ color: '#64748b' }}>Intelligent Business Platform</div>
+          <div className="min-w-0 flex-1">
+            <div className="font-display font-bold text-white text-sm leading-tight truncate">
+              {company.companyName || 'BizNexus'}
+            </div>
+            <div className="text-[10px] mt-0.5 truncate text-amber-300/80 font-mono">
+              {company.tenantId ? `${company.tenantId}` : 'Enterprise Portal'}
+            </div>
           </div>
-          <button onClick={onClose} className="ml-auto lg:hidden text-slate-400 hover:text-white">
+          <button onClick={onClose} className="ml-auto lg:hidden text-stone-400 hover:text-white">
             <X size={18} />
           </button>
         </div>
@@ -166,46 +170,51 @@ export default function Sidebar({ open, onClose }: { open?: boolean; onClose?: (
         </nav>
 
         {/* Demo Role Switcher */}
-        <div className="px-3 py-3 border-t border-white/10">
+        <div className="px-3 py-3 border-t border-white/10 bg-black/20">
           <button
             onClick={() => setRoleOpen(v => !v)}
             className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors"
           >
-            <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0" style={{ background: '#2563eb' }}>
+            <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0 bg-gradient-to-br from-[#B45309] to-[#EA580C]">
               {currentUser.avatar}
             </div>
             <div className="flex-1 text-left min-w-0">
               <div className="text-white text-xs font-medium truncate">{currentUser.name}</div>
-              <div className="text-xs truncate" style={{ color: '#64748b' }}>{currentUser.role}</div>
+              <div className="text-[11px] truncate text-amber-300/80">{currentUser.role}</div>
             </div>
-            {roleOpen ? <ChevronDown size={14} className="text-slate-400 flex-shrink-0" /> : <ChevronRight size={14} className="text-slate-400 flex-shrink-0" />}
+            {roleOpen ? <ChevronDown size={14} className="text-stone-400 flex-shrink-0" /> : <ChevronRight size={14} className="text-stone-400 flex-shrink-0" />}
           </button>
 
           {roleOpen && (
-            <div className="mt-1 rounded-lg overflow-hidden border border-white/10 animate-fade-in" style={{ background: '#1e293b' }}>
-              <div className="px-3 py-2 border-b border-white/10">
+            <div className="mt-1 rounded-xl overflow-hidden border border-white/10 animate-fade-in bg-[#1A0F08] shadow-2xl">
+              <div className="px-3 py-2 border-b border-white/10 bg-black/30">
                 <div className="flex items-center gap-1.5">
-                  <UserCheck size={12} className="text-blue-400" />
-                  <span className="text-xs font-semibold text-slate-400">DEMO MODE — SWITCH ROLE</span>
+                  <UserCheck size={12} className="text-[#F59E0B]" />
+                  <span className="text-[10px] font-bold tracking-wider text-amber-300 uppercase">
+                    SWITCH PORTAL ROLE
+                  </span>
                 </div>
               </div>
-              {demoUsers.map(user => (
-                <button
-                  key={user.id}
-                  onClick={() => { setCurrentUser(user); setRoleOpen(false); }}
-                  className={`w-full flex items-center gap-2 px-3 py-2 text-left text-xs hover:bg-white/5 transition-colors
-                    ${currentUser.id === user.id ? 'text-blue-400' : 'text-slate-300'}`}
-                >
-                  <div className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0" style={{ background: '#334155' }}>
-                    {user.avatar}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-medium truncate">{user.name}</div>
-                    <div className="text-slate-500 truncate">{user.role}</div>
-                  </div>
-                  {currentUser.id === user.id && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0" />}
-                </button>
-              ))}
+              <div className="max-h-48 overflow-y-auto py-1">
+                {availableUsers.map(user => (
+                  <button
+                    key={user.id}
+                    onClick={() => { setCurrentUser(user); setRoleOpen(false); }}
+                    className={`w-full flex items-center gap-2 px-3 py-2 text-left text-xs hover:bg-white/5 transition-colors ${
+                      currentUser.id === user.id ? 'text-[#F59E0B] bg-white/[0.04]' : 'text-stone-300'
+                    }`}
+                  >
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0 bg-[#332218]">
+                      {user.avatar}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="font-medium truncate">{user.name}</div>
+                      <div className="text-[10px] text-stone-400 truncate">{user.role}</div>
+                    </div>
+                    {currentUser.id === user.id && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#F59E0B] flex-shrink-0" />}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </div>

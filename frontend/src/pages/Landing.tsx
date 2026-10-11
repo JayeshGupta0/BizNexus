@@ -298,15 +298,15 @@ export default function Landing() {
           <div className="flex items-center gap-3">
             <Link
               to="/login"
-              className="hidden rounded-lg px-4 py-2 text-[13px] font-bold text-[#5C3A21] transition-colors hover:text-[#1F130B] hover:bg-[#2A1810]/5 sm:block"
+              className="hidden rounded-lg px-3.5 py-2 text-[13px] font-bold text-[#5C3A21] transition-colors hover:text-[#1F130B] hover:bg-[#2A1810]/5 sm:block"
             >
               Sign in
             </Link>
             <Link
-              to="/login"
-              className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#D97706] via-[#EA580C] to-[#C2410C] px-5.5 py-2.5 text-[13px] font-bold text-white shadow-lg shadow-orange-600/25 transition-all hover:shadow-xl hover:shadow-orange-600/35 hover:-translate-y-0.5"
+              to="/register"
+              className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#D97706] via-[#EA580C] to-[#C2410C] px-5 py-2.5 text-[13px] font-bold text-white shadow-lg shadow-orange-600/25 transition-all hover:shadow-xl hover:shadow-orange-600/35 hover:-translate-y-0.5"
             >
-              Request Access
+              Register Business
               <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
             </Link>
             <button

@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router';
 import AppLayout from './components/layout/AppLayout';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import LeadsPipeline from './pages/LeadsPipeline';
 import LeadDetail from './pages/LeadDetail';
@@ -30,6 +31,7 @@ import Landing from './pages/Landing';
 export const router = createBrowserRouter([
   { path: '/', Component: Landing },
   { path: '/login', Component: Login },
+  { path: '/register', Component: Register },
   {
     Component: AppLayout,
     children: [
