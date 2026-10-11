@@ -238,8 +238,10 @@ export default function Register() {
     });
   };
 
-  const handleRegistrationSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Standalone registration function — NOT tied to form onSubmit to prevent
+  // the auto-submit bug where clicking 'Continue to Step 4' re-renders the
+  // button as type='submit' in the same DOM slot, causing a spurious submit.
+  const doRegister = async () => {
     if (!validateStep(4)) return;
 
     setSubmitting(true);
@@ -419,7 +421,7 @@ export default function Register() {
             ))}
           </div>
 
-          <form onSubmit={handleRegistrationSubmit}>
+          <form>
             {/* ════ STEP 1: OWNER DETAILS ════ */}
             {currentStep === 1 && (
               <div className="space-y-6 animate-fade-in">
@@ -983,7 +985,8 @@ export default function Register() {
                 </button>
               ) : (
                 <button
-                  type="submit"
+                  type="button"
+                  onClick={doRegister}
                   disabled={submitting}
                   className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#D97706] via-[#EA580C] to-[#C2410C] text-white font-bold text-sm shadow-xl shadow-orange-600/30 hover:shadow-2xl hover:shadow-orange-600/40 transition-all flex items-center gap-2.5 cursor-pointer disabled:opacity-50"
                 >
