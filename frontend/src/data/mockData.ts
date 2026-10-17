@@ -13,10 +13,14 @@ export type Role =
 export interface DemoUser {
   id: string;
   name: string;
+  username?: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
   role: Role;
   avatar: string;
   department: string;
+  password?: string;
 }
 
 export interface Lead {
@@ -113,6 +117,9 @@ export interface OrderItem {
   quantity: number;
   unitPrice: number;
   discount: number;
+  productName?: string;
+  total?: number;
+  description?: string;
 }
 
 export interface Quotation {
@@ -145,7 +152,7 @@ export interface Payment {
   customerId: string;
   invoiceId: string;
   amount: number;
-  method: 'Bank Transfer' | 'UPI' | 'Card' | 'Cash' | 'Other';
+  method: 'Bank Transfer' | 'UPI' | 'Card' | 'Cash' | 'Other' | string;
   date: string;
   reference: string;
   status: 'Completed' | 'Pending' | 'Failed';
@@ -176,16 +183,21 @@ export interface Supplier {
   rating: number;
   status: 'Active' | 'Inactive';
   leadTime: number;
+  paymentTerms?: string;
+  taxId?: string;
+  address?: string;
+  notes?: string;
 }
 
 export interface PurchaseOrder {
   id: string;
   supplierId: string;
-  items: { productId: string; quantity: number; unitCost: number }[];
+  items: { productId: string; quantity: number; unitCost: number; productName?: string; total?: number }[];
   total: number;
   orderDate: string;
   expectedDate: string;
   status: 'Draft' | 'Sent' | 'Confirmed' | 'Received' | 'Cancelled';
+  notes?: string;
 }
 
 export interface SocialPost {
@@ -248,183 +260,183 @@ export interface Document {
 // ─── Demo Users ───────────────────────────────────────────────────────────────
 
 export const demoUsers: DemoUser[] = [
-  { id: 'u1', name: 'Arjun Mehta', email: 'arjun@biznexuz.com', role: 'Business Owner', avatar: 'AM', department: 'Executive' },
-  { id: 'u2', name: 'Rahul Sharma', email: 'rahul@biznexuz.com', role: 'Sales Manager', avatar: 'RS', department: 'Sales' },
-  { id: 'u3', name: 'Priya Shah', email: 'priya@biznexuz.com', role: 'Sales Executive', avatar: 'PS', department: 'Sales' },
-  { id: 'u4', name: 'Kavya Nair', email: 'kavya@biznexuz.com', role: 'Marketing Manager', avatar: 'KN', department: 'Marketing' },
-  { id: 'u5', name: 'Vikram Rao', email: 'vikram@biznexuz.com', role: 'Inventory Manager', avatar: 'VR', department: 'Operations' },
-  { id: 'u6', name: 'Sanjay Kumar', email: 'sanjay@biznexuz.com', role: 'Purchase Manager', avatar: 'SK', department: 'Procurement' },
-  { id: 'u7', name: 'Neha Patel', email: 'neha@biznexuz.com', role: 'Finance Manager', avatar: 'NP', department: 'Finance' },
-  { id: 'u8', name: 'Aisha Khan', email: 'aisha@biznexuz.com', role: 'Business Analyst', avatar: 'AK', department: 'Analytics' },
+  { id: 'u1', name: 'Suresh Narayanan', email: 'suresh@nestle.in', role: 'Business Owner', avatar: 'SN', department: 'Executive' },
+  { id: 'u2', name: 'Rahul Sharma', email: 'rahul.sharma@nestle.in', role: 'Sales Manager', avatar: 'RS', department: 'Sales & Modern Trade' },
+  { id: 'u3', name: 'Priya Shah', email: 'priya.shah@nestle.in', role: 'Sales Executive', avatar: 'PS', department: 'Key Account Sales' },
+  { id: 'u4', name: 'Kavya Nair', email: 'kavya.nair@nestle.in', role: 'Marketing Manager', avatar: 'KN', department: 'Brand Marketing' },
+  { id: 'u5', name: 'Vikram Rao', email: 'vikram.rao@nestle.in', role: 'Inventory Manager', avatar: 'VR', department: 'Supply Chain & Cold Storage' },
+  { id: 'u6', name: 'Sanjay Kumar', email: 'sanjay.kumar@nestle.in', role: 'Purchase Manager', avatar: 'SK', department: 'Agro Procurement' },
+  { id: 'u7', name: 'Neha Patel', email: 'neha.patel@nestle.in', role: 'Finance Manager', avatar: 'NP', department: 'Commercial Finance' },
+  { id: 'u8', name: 'Aisha Khan', email: 'aisha.khan@nestle.in', role: 'Business Analyst', avatar: 'AK', department: 'Demand Analytics' },
 ];
 
 // ─── Customers ────────────────────────────────────────────────────────────────
 
 export const customers: Customer[] = [
   {
-    id: 'c1', businessName: 'Acme Corporation', customerType: 'Distributor',
-    contactPerson: 'Suresh Menon', email: 'suresh@acme.in', phone: '+91 98765 43210',
-    location: 'Mumbai, MH', industry: 'Technology Distribution', accountOwner: 'Rahul Sharma',
-    status: 'Active', totalOrders: 42, totalRevenue: 2840000, avgOrderValue: 67619, outstanding: 184000,
-    lastPurchase: '2025-08-28', customerSince: '2022-03-15',
-    taxId: 'GSTIN27ABCDE1234F1Z5', website: 'www.acmecorp.in',
-    address: '301, Commercial Tower, Bandra Kurla Complex, Mumbai 400051',
-    notes: 'Top distributor for Maharashtra and Goa regions.',
+    id: 'c1', businessName: 'Reliance Retail Ventures Ltd', customerType: 'Enterprise',
+    contactPerson: 'Suresh Menon', email: 'suresh.menon@relianceretail.com', phone: '+91 98765 43210',
+    location: 'Mumbai, MH', industry: 'Supermarket Chains & Hypermarkets', accountOwner: 'Rahul Sharma',
+    status: 'Active', totalOrders: 142, totalRevenue: 4840000, avgOrderValue: 34085, outstanding: 184000,
+    lastPurchase: '2025-08-28', customerSince: '2021-03-15',
+    taxId: 'GSTIN27AAACR1234F1Z5', website: 'www.relianceretail.com',
+    address: 'Reliance Corporate Park, Thane-Belapur Road, Navi Mumbai 400701',
+    notes: 'Primary national modern-trade retail account. Rapid weekly replenishment on Maggi & Nescafé lines.',
   },
   {
-    id: 'c2', businessName: 'NovaTech Industries', customerType: 'Enterprise',
-    contactPerson: 'Anjali Desai', email: 'anjali@novatech.in', phone: '+91 99887 65432',
-    location: 'Bangalore, KA', industry: 'Software & IT', accountOwner: 'Rahul Sharma',
-    status: 'Active', totalOrders: 28, totalRevenue: 1920000, avgOrderValue: 68571, outstanding: 96000,
-    lastPurchase: '2025-09-01', customerSince: '2021-11-08',
-    taxId: 'GSTIN29ABCDE5678G2Z6', website: 'www.novatech.in',
-    address: '12th Floor, Tech Park, Whitefield, Bangalore 560066',
-    notes: 'Annual enterprise contract. High growth potential.',
+    id: 'c2', businessName: 'Avenue Supermarts Ltd (DMart)', customerType: 'Enterprise',
+    contactPerson: 'Anjali Desai', email: 'anjali.desai@dmartindia.com', phone: '+91 99887 65432',
+    location: 'Thane, MH', industry: 'FMCG Retail Chains', accountOwner: 'Rahul Sharma',
+    status: 'Active', totalOrders: 128, totalRevenue: 5620000, avgOrderValue: 43906, outstanding: 96000,
+    lastPurchase: '2025-09-01', customerSince: '2020-11-08',
+    taxId: 'GSTIN27AABCA5678G2Z6', website: 'www.dmartindia.com',
+    address: 'B-72, Wagle Industrial Estate, Road No. 33, Thane 400604',
+    notes: 'Highest volume FMCG grocery buyer across Western and Southern India.',
   },
   {
-    id: 'c3', businessName: 'Orbit Technologies', customerType: 'Business',
-    contactPerson: 'Rajan Pillai', email: 'rajan@orbit.in', phone: '+91 97654 32109',
-    location: 'Pune, MH', industry: 'Manufacturing', accountOwner: 'Priya Shah',
-    status: 'Active', totalOrders: 18, totalRevenue: 860000, avgOrderValue: 47778, outstanding: 42000,
+    id: 'c3', businessName: 'Blinkit Commerce Dark Stores', customerType: 'Distributor',
+    contactPerson: 'Rajan Pillai', email: 'rajan.pillai@blinkit.com', phone: '+91 97654 32109',
+    location: 'Gurugram, HR', industry: 'Quick Commerce & Grocery Delivery', accountOwner: 'Priya Shah',
+    status: 'Active', totalOrders: 94, totalRevenue: 2860000, avgOrderValue: 30426, outstanding: 42000,
     lastPurchase: '2025-08-20', customerSince: '2023-01-20',
-    taxId: 'GSTIN27ORBIT9012H3Z7', website: 'www.orbittec.in',
-    address: 'Plot 45, Hinjewadi IT Park, Pune 411057',
-    notes: 'Growing account. Interested in analytics modules.',
+    taxId: 'GSTIN06AABCG9012H3Z7', website: 'www.blinkit.com',
+    address: 'Plot 45, Udyog Vihar Phase IV, Gurugram 122015',
+    notes: 'Dark store instant inventory hub with 48-hour automated dispatch cycle.',
   },
   {
-    id: 'c4', businessName: 'Apex Retail', customerType: 'Retailer',
-    contactPerson: 'Meera Iyer', email: 'meera@apexretail.in', phone: '+91 96543 21098',
-    location: 'Chennai, TN', industry: 'Retail', accountOwner: 'Priya Shah',
-    status: 'Active', totalOrders: 35, totalRevenue: 1240000, avgOrderValue: 35429, outstanding: 62000,
-    lastPurchase: '2025-09-02', customerSince: '2022-07-12',
-    taxId: 'GSTIN33APEX3456I4Z8', website: 'www.apexretail.in',
-    address: '78, Anna Salai, Chennai 600002',
-    notes: 'High volume, multiple retail locations.',
+    id: 'c4', businessName: 'Metro Cash & Carry Wholesale', customerType: 'Wholesaler',
+    contactPerson: 'Meera Iyer', email: 'meera.iyer@metro-cc.in', phone: '+91 96543 21098',
+    location: 'Bangalore, KA', industry: 'B2B Wholesale & HoReCa Supply', accountOwner: 'Priya Shah',
+    status: 'Active', totalOrders: 85, totalRevenue: 3440000, avgOrderValue: 40471, outstanding: 62000,
+    lastPurchase: '2025-09-02', customerSince: '2021-07-12',
+    taxId: 'GSTIN29AABCM3456I4Z8', website: 'www.metro-cc.in',
+    address: '26/3, Industrial Suburb, Yeshwantpur, Bangalore 560022',
+    notes: 'Major B2B cash & carry supplying restaurants, caterers, and local kirana networks.',
   },
   {
-    id: 'c5', businessName: 'Vertex Solutions', customerType: 'Wholesaler',
-    contactPerson: 'Deepak Joshi', email: 'deepak@vertex.in', phone: '+91 95432 10987',
-    location: 'Delhi, DL', industry: 'Wholesale Distribution', accountOwner: 'Rahul Sharma',
-    status: 'Active', totalOrders: 22, totalRevenue: 1680000, avgOrderValue: 76364, outstanding: 220000,
+    id: 'c5', businessName: 'Swiggy Instamart Urban Fulfillment', customerType: 'Distributor',
+    contactPerson: 'Deepak Joshi', email: 'deepak.joshi@swiggy.in', phone: '+91 95432 10987',
+    location: 'Delhi, DL', industry: 'Quick Commerce Fulfillment', accountOwner: 'Rahul Sharma',
+    status: 'Active', totalOrders: 72, totalRevenue: 2680000, avgOrderValue: 37222, outstanding: 220000,
     lastPurchase: '2025-08-15', customerSince: '2022-05-03',
-    taxId: 'GSTIN07VRTX7890J5Z9', website: 'www.vertexsol.in',
-    address: '15, Nehru Place, New Delhi 110019',
-    notes: 'North India wholesale partner. Payment delays noted.',
+    taxId: 'GSTIN07AABCS7890J5Z9', website: 'www.swiggy.com',
+    address: '15, Okhla Industrial Area Phase III, New Delhi 110020',
+    notes: 'High demand for KitKat, Maggi Cuppa, and Nescafé Cold Coffee cans.',
   },
   {
-    id: 'c6', businessName: 'CloudPeak Labs', customerType: 'Enterprise',
-    contactPerson: 'Shruti Banerjee', email: 'shruti@cloudpeak.in', phone: '+91 94321 09876',
-    location: 'Hyderabad, TS', industry: 'Cloud Services', accountOwner: 'Rahul Sharma',
-    status: 'Active', totalOrders: 15, totalRevenue: 1120000, avgOrderValue: 74667, outstanding: 0,
-    lastPurchase: '2025-08-30', customerSince: '2023-06-10',
-    taxId: 'GSTIN36CLPK2345K6Z0', website: 'www.cloudpeak.io',
-    address: 'Level 8, HITEC City, Hyderabad 500081',
-    notes: 'Excellent payment track record. Exploring AI suite.',
+    id: 'c6', businessName: 'Cafe Coffee Day & HoReCa Institutional', customerType: 'Enterprise',
+    contactPerson: 'Shruti Banerjee', email: 'shruti.banerjee@cafecoffeeday.com', phone: '+91 94321 09876',
+    location: 'Hyderabad, TS', industry: 'HoReCa & Hospitality Foodservice', accountOwner: 'Rahul Sharma',
+    status: 'Active', totalOrders: 45, totalRevenue: 1820000, avgOrderValue: 40444, outstanding: 0,
+    lastPurchase: '2025-08-30', customerSince: '2022-06-10',
+    taxId: 'GSTIN36AABCC2345K6Z0', website: 'www.cafecoffeeday.com',
+    address: 'Level 8, HITEC City, Madhapur, Hyderabad 500081',
+    notes: 'Institutional client sourcing Nescafé vending coffee beans and Milkmaid bulk packs.',
   },
   {
-    id: 'c7', businessName: 'Greenfield Co.', customerType: 'Business',
-    contactPerson: 'Arun Krishnan', email: 'arun@greenfield.in', phone: '+91 93210 98765',
-    location: 'Kochi, KL', industry: 'Agriculture & Food', accountOwner: 'Priya Shah',
-    status: 'At Risk', totalOrders: 8, totalRevenue: 320000, avgOrderValue: 40000, outstanding: 95000,
-    lastPurchase: '2025-07-10', customerSince: '2024-02-28',
-    taxId: 'GSTIN32GFLD6789L7Z1', website: 'www.greenfieldco.in',
-    address: '22, MG Road, Kochi 682016',
-    notes: 'Irregular purchase pattern. Follow up on outstanding balance.',
+    id: 'c7', businessName: "Spencer's Retail Eastern Hub", customerType: 'Retailer',
+    contactPerson: 'Arun Krishnan', email: 'arun.krishnan@spencersretail.com', phone: '+91 93210 98765',
+    location: 'Kolkata, WB', industry: 'Supermarkets & Grocery Retail', accountOwner: 'Priya Shah',
+    status: 'At Risk', totalOrders: 38, totalRevenue: 1250000, avgOrderValue: 32895, outstanding: 95000,
+    lastPurchase: '2025-07-10', customerSince: '2023-02-28',
+    taxId: 'GSTIN19AABCS6789L7Z1', website: 'www.spencersretail.com',
+    address: '31, Shakespeare Sarani, Kolkata 700017',
+    notes: 'Follow-up required on monsoon inventory buffer for Cerelac and Everyday dairy powders.',
   },
 ];
 
 // ─── Leads ────────────────────────────────────────────────────────────────────
 
+// ─── Leads ────────────────────────────────────────────────────────────────────
+
 export const leads: Lead[] = [
   {
-    id: 'l1', companyName: 'Acme Retail Prospect', contactPerson: 'Vivek Kapoor',
-    email: 'vivek@acmeretail.com', phone: '+91 98001 23456', location: 'Jaipur, RJ',
-    industry: 'Retail', leadType: 'Retailer', source: 'Website', stage: 'Proposal',
-    potentialValue: 480000, probability: 65, priority: 'High', assignedTo: 'Priya Shah',
+    id: 'l1', companyName: 'Zepto Quick Grocery Hubs', contactPerson: 'Vivek Kapoor',
+    email: 'vivek.kapoor@zepto.in', phone: '+91 98001 23456', location: 'Jaipur, RJ',
+    industry: 'Quick Commerce & Grocery', leadType: 'Retailer', source: 'Website', stage: 'Proposal',
+    potentialValue: 1480000, probability: 75, priority: 'High', assignedTo: 'Priya Shah',
     createdDate: '2025-07-15', lastActivity: '2025-09-01', nextFollowUp: '2025-09-05',
-    expectedClose: '2025-09-30', campaignId: 'camp1', notes: 'Interested in CRM + Analytics package.',
+    expectedClose: '2025-09-30', campaignId: 'camp1', notes: 'Expansion of dark store FMCG distribution across 18 new micro-warehouses.',
     activities: [
-      { id: 'a1', type: 'system', title: 'Lead created from Website', description: 'Prospect filled contact form on website.', date: '2025-07-15', user: 'System' },
-      { id: 'a2', type: 'call', title: 'Initial discovery call', description: '30-min call. Strong interest in CRM suite.', date: '2025-07-20', user: 'Priya Shah' },
-      { id: 'a3', type: 'email', title: 'Product brochure sent', description: 'Sent product catalog and pricing sheet.', date: '2025-07-25', user: 'Priya Shah' },
-      { id: 'a4', type: 'quote', title: 'Quotation sent', description: 'QT-1082 sent for Enterprise CRM + Analytics.', date: '2025-08-10', user: 'Priya Shah' },
-      { id: 'a5', type: 'email', title: 'Follow-up email', description: 'Prospect viewed quotation. Requested revised pricing.', date: '2025-09-01', user: 'Priya Shah' },
+      { id: 'a1', type: 'system', title: 'Lead created from B2B Portal', description: 'Inbound enquiry for Maggi & Nescafé bulk pallets.', date: '2025-07-15', user: 'System' },
+      { id: 'a2', type: 'call', title: 'Category manager discovery call', description: '30-min call. High weekly stock turnover projection.', date: '2025-07-20', user: 'Priya Shah' },
+      { id: 'a3', type: 'email', title: 'FMCG product catalog sent', description: 'Sent official wholesale pricing matrix and MOQs.', date: '2025-07-25', user: 'Priya Shah' },
+      { id: 'a4', type: 'quote', title: 'Quotation delivered', description: 'QT-1085 master price agreement delivered.', date: '2025-08-10', user: 'Priya Shah' },
+      { id: 'a5', type: 'email', title: 'Commercial negotiation', description: 'Prospect requested revised tiered rebates on Maggi cartons.', date: '2025-09-01', user: 'Priya Shah' },
     ],
   },
   {
-    id: 'l2', companyName: 'ABC Wholesale', contactPerson: 'Mohan Lal',
-    email: 'mohan@abcwholesale.com', phone: '+91 97002 34567', location: 'Surat, GJ',
-    industry: 'Wholesale Distribution', leadType: 'Wholesaler', source: 'Instagram', stage: 'Qualified',
-    potentialValue: 840000, probability: 50, priority: 'High', assignedTo: 'Priya Shah',
+    id: 'l2', companyName: 'Taj Hotels F&B Procurement', contactPerson: 'Mohan Lal',
+    email: 'mohan.lal@tajhotels.com', phone: '+91 97002 34567', location: 'Mumbai, MH',
+    industry: 'Luxury Hospitality & Catering', leadType: 'Enterprise', source: 'Sales Team', stage: 'Qualified',
+    potentialValue: 2400000, probability: 60, priority: 'High', assignedTo: 'Rahul Sharma',
     createdDate: '2025-08-01', lastActivity: '2025-08-28', nextFollowUp: '2025-09-06',
-    expectedClose: '2025-10-15', campaignId: 'camp2', notes: 'Generated from Wholesale Partner Campaign.',
+    expectedClose: '2025-10-15', campaignId: 'camp2', notes: 'Annual master contract for Nescafé beans, Nestea, and Milkmaid across 32 properties.',
     activities: [
-      { id: 'a6', type: 'system', title: 'Lead created from Instagram campaign', description: 'Prospect clicked ad from Wholesale Partner Campaign.', date: '2025-08-01', user: 'System' },
-      { id: 'a7', type: 'call', title: 'Qualification call', description: 'Confirmed budget. Evaluating 3 vendors.', date: '2025-08-15', user: 'Rahul Sharma' },
-      { id: 'a8', type: 'meeting', title: 'Online demo scheduled', description: 'Product walkthrough demo scheduled.', date: '2025-08-28', user: 'Priya Shah' },
+      { id: 'a6', type: 'system', title: 'Institutional lead created', description: 'Referral from hospitality culinary association.', date: '2025-08-01', user: 'System' },
+      { id: 'a7', type: 'meeting', title: 'Executive tasting session', description: 'Tasting of specialty Nescafé blends and culinary Milkmaid recipes.', date: '2025-08-20', user: 'Rahul Sharma' },
+      { id: 'a8', type: 'quote', title: 'Institutional quote submitted', description: 'Delivered QT-1084 with HoReCa bulk discounts.', date: '2025-08-28', user: 'Rahul Sharma' },
     ],
   },
   {
-    id: 'l3', companyName: 'Nova Distributor', contactPerson: 'Sunita Rao',
-    email: 'sunita@novadist.com', phone: '+91 96003 45678', location: 'Hyderabad, TS',
-    industry: 'FMCG Distribution', leadType: 'Distributor', source: 'LinkedIn', stage: 'Negotiation',
-    potentialValue: 1200000, probability: 75, priority: 'High', assignedTo: 'Rahul Sharma',
+    id: 'l3', companyName: 'Haldiram Snacks & Sweets Chain', contactPerson: 'Sanjay Aggarwal',
+    email: 'sanjay@haldirams.com', phone: '+91 96003 45678', location: 'Nagpur, MH',
+    industry: 'Confectionery & QSR Retail', leadType: 'Wholesaler', source: 'LinkedIn', stage: 'Negotiation',
+    potentialValue: 1850000, probability: 80, priority: 'High', assignedTo: 'Rahul Sharma',
     createdDate: '2025-06-20', lastActivity: '2025-09-02', nextFollowUp: '2025-09-04',
-    expectedClose: '2025-09-20', campaignId: 'camp3', notes: 'High-value distributor. Near closing.',
+    expectedClose: '2025-09-20', campaignId: 'camp3', notes: 'Procuring bulk condensed milk for festive sweet production.',
     activities: [
-      { id: 'a9', type: 'system', title: 'Lead created from LinkedIn campaign', description: 'Inbound enquiry from LinkedIn B2B campaign.', date: '2025-06-20', user: 'System' },
-      { id: 'a10', type: 'meeting', title: 'In-person meeting at HQ', description: 'Presented full platform demo. Very positive reception.', date: '2025-07-10', user: 'Rahul Sharma' },
-      { id: 'a11', type: 'quote', title: 'Custom proposal sent', description: 'Custom ERP + CRM + AI package proposal submitted.', date: '2025-07-25', user: 'Rahul Sharma' },
-      { id: 'a12', type: 'call', title: 'Pricing negotiation call', description: 'Requesting 12% volume discount. Under review.', date: '2025-09-02', user: 'Rahul Sharma' },
+      { id: 'a9', type: 'system', title: 'Inbound enterprise inquiry', description: 'Industrial culinary ingredients inquiry.', date: '2025-06-20', user: 'System' },
+      { id: 'a10', type: 'meeting', title: 'Factory technical audit', description: 'Food safety and cold-chain compliance verified.', date: '2025-07-10', user: 'Rahul Sharma' },
+      { id: 'a11', type: 'quote', title: 'Bulk Milkmaid quotation sent', description: 'QT-1083 submitted for 1,200 master trays.', date: '2025-07-25', user: 'Rahul Sharma' },
+      { id: 'a12', type: 'call', title: 'Final pricing call', description: 'Rebate structure accepted. Awaiting contract signature.', date: '2025-09-02', user: 'Rahul Sharma' },
     ],
   },
   {
-    id: 'l4', companyName: 'Brightline Systems', contactPerson: 'Pooja Iyer',
-    email: 'pooja@brightline.in', phone: '+91 95004 56789', location: 'Bengaluru, KA',
-    industry: 'IT Services', leadType: 'Business', source: 'Referral', stage: 'Contacted',
-    potentialValue: 360000, probability: 30, priority: 'Medium', assignedTo: 'Priya Shah',
+    id: 'l4', companyName: 'BigBasket B2B Wholesale Hubs', contactPerson: 'Anita Rao',
+    email: 'anita.rao@bigbasket.com', phone: '+91 95004 56789', location: 'Bengaluru, KA',
+    industry: 'Online Supermarket Distribution', leadType: 'Distributor', source: 'Referral', stage: 'Contacted',
+    potentialValue: 3200000, probability: 45, priority: 'High', assignedTo: 'Priya Shah',
     createdDate: '2025-08-18', lastActivity: '2025-08-22', nextFollowUp: '2025-09-08',
-    expectedClose: '2025-11-01', campaignId: undefined, notes: 'Referred by Acme Corporation.',
+    expectedClose: '2025-11-01', campaignId: undefined, notes: 'National warehouse distribution tender for baby nutrition and instant noodles.',
     activities: [
-      { id: 'a13', type: 'system', title: 'Lead created via referral', description: 'Referred by Suresh Menon (Acme Corporation).', date: '2025-08-18', user: 'System' },
-      { id: 'a14', type: 'email', title: 'Introduction email sent', description: 'Sent welcome email with product overview.', date: '2025-08-22', user: 'Priya Shah' },
+      { id: 'a13', type: 'system', title: 'Tender request ingested', description: 'RFP documents received for Q4 FY26 supply.', date: '2025-08-18', user: 'System' },
+      { id: 'a14', type: 'email', title: 'Capabilities deck delivered', description: 'Shared packaging specs and manufacturing certifications.', date: '2025-08-22', user: 'Priya Shah' },
     ],
   },
   {
-    id: 'l5', companyName: 'Northstar Retail', contactPerson: 'Amit Sharma',
-    email: 'amit@northstar.in', phone: '+91 94005 67890', location: 'Chandigarh, PB',
-    industry: 'Retail Chain', leadType: 'Retailer', source: 'Facebook', stage: 'New',
-    potentialValue: 520000, probability: 20, priority: 'Medium', assignedTo: 'Priya Shah',
+    id: 'l5', companyName: 'More Retail Supermarket Network', contactPerson: 'Gaurav Sen',
+    email: 'gaurav.sen@moreretail.in', phone: '+91 94005 67890', location: 'Chandigarh, PB',
+    industry: 'Supermarket Retail Chain', leadType: 'Retailer', source: 'Facebook', stage: 'New',
+    potentialValue: 920000, probability: 30, priority: 'Medium', assignedTo: 'Priya Shah',
     createdDate: '2025-09-01', lastActivity: '2025-09-01', nextFollowUp: '2025-09-07',
-    expectedClose: '2025-11-30', campaignId: 'camp1', notes: 'New inbound from Facebook retail campaign.',
+    expectedClose: '2025-11-30', campaignId: 'camp1', notes: 'Replenishment for 42 regional grocery branches in Northern India.',
     activities: [
-      { id: 'a15', type: 'system', title: 'Lead created from Facebook campaign', description: 'Lead form submission from Retail Growth campaign.', date: '2025-09-01', user: 'System' },
+      { id: 'a15', type: 'system', title: 'Inbound retail inquiry', description: 'Campaign form submission from Retail Growth campaign.', date: '2025-09-01', user: 'System' },
     ],
   },
   {
-    id: 'l6', companyName: 'Metro Pharma Group', contactPerson: 'Dr. Karan Malhotra',
-    email: 'karan@metropharma.in', phone: '+91 93006 78901', location: 'Mumbai, MH',
-    industry: 'Pharmaceutical', leadType: 'Enterprise', source: 'Events', stage: 'Won',
-    potentialValue: 1800000, probability: 100, priority: 'High', assignedTo: 'Rahul Sharma',
+    id: 'l6', companyName: 'Chaayos Institutional Supply', contactPerson: 'Raghav Verma',
+    email: 'raghav@chaayos.com', phone: '+91 93006 78901', location: 'Mumbai, MH',
+    industry: 'Hospitality & Tea Cafe Chain', leadType: 'Enterprise', source: 'Events', stage: 'Won',
+    potentialValue: 1650000, probability: 100, priority: 'High', assignedTo: 'Rahul Sharma',
     createdDate: '2025-04-10', lastActivity: '2025-07-15', nextFollowUp: '',
-    expectedClose: '2025-07-15', campaignId: undefined, notes: 'Converted to customer. See Acme Corporation account.',
+    expectedClose: '2025-07-15', campaignId: undefined, notes: 'Converted to active contract. Sourcing Nestlé Everyday Dairy Whitener and Nestea mixes.',
     activities: [
-      { id: 'a16', type: 'system', title: 'Lead created at trade event', description: 'Met at BizTech Expo 2025, Mumbai.', date: '2025-04-10', user: 'System' },
-      { id: 'a17', type: 'meeting', title: 'Full platform demo', description: 'C-suite presentation, 2 hours.', date: '2025-05-20', user: 'Arjun Mehta' },
-      { id: 'a18', type: 'quote', title: 'Enterprise proposal submitted', description: 'Custom 3-year enterprise agreement submitted.', date: '2025-06-10', user: 'Rahul Sharma' },
-      { id: 'a19', type: 'system', title: 'Lead converted to customer', description: 'Agreement signed. Account created.', date: '2025-07-15', user: 'System' },
+      { id: 'a16', type: 'system', title: 'Met at Food Expo Mumbai', description: 'Key account discussion at International Food Forum.', date: '2025-04-10', user: 'System' },
+      { id: 'a17', type: 'meeting', title: 'Bulk supply agreement finalized', description: 'Commercial agreement confirmed for 120 stores.', date: '2025-05-20', user: 'Suresh Narayanan' },
+      { id: 'a18', type: 'quote', title: 'Master contract signed', description: 'Contract accepted and dispatched.', date: '2025-07-15', user: 'Rahul Sharma' },
     ],
   },
   {
-    id: 'l7', companyName: 'Sunrise Distributors', contactPerson: 'Farhan Sheikh',
-    email: 'farhan@sunrise.in', phone: '+91 92007 89012', location: 'Ahmedabad, GJ',
-    industry: 'Distribution', leadType: 'Distributor', source: 'Instagram', stage: 'Lost',
-    potentialValue: 640000, probability: 0, priority: 'Low', assignedTo: 'Priya Shah',
+    id: 'l7', companyName: 'Blue Tokai Specialty Roasters Hub', contactPerson: 'Farhan Sheikh',
+    email: 'farhan@bluetokai.in', phone: '+91 92007 89012', location: 'Ahmedabad, GJ',
+    industry: 'Artisanal Cafe Retail', leadType: 'Distributor', source: 'Instagram', stage: 'Lost',
+    potentialValue: 480000, probability: 0, priority: 'Low', assignedTo: 'Priya Shah',
     createdDate: '2025-05-01', lastActivity: '2025-07-30', nextFollowUp: '',
-    expectedClose: '2025-07-30', campaignId: 'camp2', notes: 'Went with competitor. Price sensitive.',
+    expectedClose: '2025-07-30', campaignId: 'camp2', notes: 'Opted for single-origin estate direct sourcing.',
     activities: [
-      { id: 'a20', type: 'system', title: 'Lead created from Instagram', description: 'Lead from Wholesale Partner Campaign.', date: '2025-05-01', user: 'System' },
-      { id: 'a21', type: 'system', title: 'Lead marked as Lost', description: 'Prospect chose competitor on price.', date: '2025-07-30', user: 'Priya Shah' },
+      { id: 'a19', type: 'system', title: 'Marked as lost', description: 'Prospect chose boutique micro-roaster.', date: '2025-07-30', user: 'Priya Shah' },
     ],
   },
 ];
@@ -432,11 +444,13 @@ export const leads: Lead[] = [
 // ─── Products ─────────────────────────────────────────────────────────────────
 
 export const products: Product[] = [
-  { id: 'p1', sku: 'BNX-CRM-001', name: 'Enterprise CRM Suite', category: 'CRM', description: 'Full CRM with lead management, pipeline, and customer analytics', price: 48000, cost: 18000, currentStock: 150, reorderLevel: 30, supplierId: 's1', status: 'Active', unitsSold: 84 },
-  { id: 'p2', sku: 'BNX-ANA-002', name: 'Business Analytics Pro', category: 'Analytics', description: 'Advanced BI and business analytics with custom dashboards', price: 36000, cost: 14000, currentStock: 8, reorderLevel: 15, supplierId: 's1', status: 'Low Stock', unitsSold: 62 },
-  { id: 'p3', sku: 'BNX-INV-003', name: 'Inventory Management Module', category: 'Operations', description: 'Real-time inventory tracking and purchase management', price: 24000, cost: 9000, currentStock: 0, reorderLevel: 10, supplierId: 's2', status: 'Out of Stock', unitsSold: 45 },
-  { id: 'p4', sku: 'BNX-AI-004', name: 'AI Assistant Pro', category: 'AI', description: 'RAG-powered AI assistant for business documents and data', price: 60000, cost: 22000, currentStock: 85, reorderLevel: 20, supplierId: 's1', status: 'Active', unitsSold: 38 },
-  { id: 'p5', sku: 'BNX-ERP-005', name: 'Cloud ERP Package', category: 'ERP', description: 'Complete ERP with finance, operations, and procurement', price: 84000, cost: 32000, currentStock: 42, reorderLevel: 10, supplierId: 's3', status: 'Active', unitsSold: 29 },
+  { id: 'p1', sku: 'NES-MAG-001', name: 'Maggi 2-Minute Masala Noodles (Master Carton - 96 packs)', category: 'Instant Foods', description: 'Iconic instant noodles with authentic Indian spice blend, 96-pack bulk case', price: 1440, cost: 960, currentStock: 1250, reorderLevel: 200, supplierId: 's3', status: 'Active', unitsSold: 420 },
+  { id: 'p2', sku: 'NES-COF-002', name: 'Nescafé Classic Instant Coffee (Glass Jar 200g - Case of 24)', category: 'Beverages & Coffee', description: '100% pure roasted coffee granules, master wholesale shipping case', price: 13200, cost: 8400, currentStock: 480, reorderLevel: 80, supplierId: 's2', status: 'Active', unitsSold: 280 },
+  { id: 'p3', sku: 'NES-KIT-003', name: 'KitKat 4-Finger Milk Chocolate Wafer (Box of 48 Bars)', category: 'Confectionery', description: 'Crisp wafer finger bar covered in smooth milk chocolate, shelf-ready display pack', price: 1920, cost: 1200, currentStock: 850, reorderLevel: 150, supplierId: 's1', status: 'Active', unitsSold: 510 },
+  { id: 'p4', sku: 'NES-MLK-004', name: 'Nestlé Milkmaid Sweetened Condensed Milk (Tin 400g - Tray of 24)', category: 'Dairy & Culinary', description: 'Premium condensed milk for desserts, confectionery and culinary bakery applications', price: 3840, cost: 2600, currentStock: 620, reorderLevel: 100, supplierId: 's1', status: 'Active', unitsSold: 210 },
+  { id: 'p5', sku: 'NES-CER-005', name: 'Nestlé Cerelac Fortified Baby Cereal Wheat & Apple (Case of 18)', category: 'Nutrition & Baby Foods', description: 'Iron-fortified complementary baby food with goodness of cereal and milk', price: 5400, cost: 3600, currentStock: 310, reorderLevel: 50, supplierId: 's3', status: 'Active', unitsSold: 160 },
+  { id: 'p6', sku: 'NES-EVR-006', name: 'Nestlé Everyday Dairy Whitener (1kg Pouch - Box of 12)', category: 'Dairy & Milk Powders', description: 'Specially created to enhance taste of tea with thick, creamy dairy solids', price: 5160, cost: 3500, currentStock: 540, reorderLevel: 90, supplierId: 's1', status: 'Active', unitsSold: 320 },
+  { id: 'p7', sku: 'NES-TEA-007', name: 'Nestea Lemon Instant Iced Tea Mix (Pouch 1kg - Box of 10)', category: 'Beverages & Tea', description: 'Refreshing iced tea beverage mix with natural lemon flavour, institutional case', price: 3600, cost: 2300, currentStock: 420, reorderLevel: 70, supplierId: 's2', status: 'Active', unitsSold: 190 },
 ];
 
 // ─── Sales Orders ─────────────────────────────────────────────────────────────
@@ -444,48 +458,48 @@ export const products: Product[] = [
 export const salesOrders: SalesOrder[] = [
   {
     id: 'ORD-1048', customerId: 'c1',
-    items: [{ productId: 'p1', quantity: 3, unitPrice: 48000, discount: 5 }, { productId: 'p4', quantity: 1, unitPrice: 60000, discount: 0 }],
-    subtotal: 204000, tax: 36720, discount: 7200, total: 233520,
+    items: [{ productId: 'p1', quantity: 200, unitPrice: 1440, discount: 5 }, { productId: 'p2', quantity: 15, unitPrice: 13200, discount: 5 }],
+    subtotal: 486000, tax: 24300, discount: 24300, total: 486000,
     orderDate: '2025-08-28', salesperson: 'Rahul Sharma',
-    billingAddress: '301, Commercial Tower, Bandra Kurla Complex, Mumbai 400051',
-    shippingAddress: '301, Commercial Tower, Bandra Kurla Complex, Mumbai 400051',
-    paymentStatus: 'Partial', fulfillmentStatus: 'Delivered', invoiceId: 'INV-2048', notes: '',
+    billingAddress: 'Reliance Corporate Park, Thane-Belapur Road, Navi Mumbai 400701',
+    shippingAddress: 'Reliance Retail Central Logistics Park, Bhiwandi, MH 421302',
+    paymentStatus: 'Paid', fulfillmentStatus: 'Delivered', invoiceId: 'INV-2048', notes: 'Scheduled weekly replenishment delivery for Western Hypermarket stores.',
   },
   {
     id: 'ORD-1049', customerId: 'c2',
-    items: [{ productId: 'p5', quantity: 2, unitPrice: 84000, discount: 8 }, { productId: 'p2', quantity: 2, unitPrice: 36000, discount: 5 }],
-    subtotal: 240000, tax: 43200, discount: 20400, total: 262800,
+    items: [{ productId: 'p3', quantity: 150, unitPrice: 1920, discount: 8 }, { productId: 'p4', quantity: 60, unitPrice: 3840, discount: 5 }],
+    subtotal: 518400, tax: 25920, discount: 34560, total: 509760,
     orderDate: '2025-09-01', salesperson: 'Rahul Sharma',
-    billingAddress: '12th Floor, Tech Park, Whitefield, Bangalore 560066',
-    shippingAddress: '12th Floor, Tech Park, Whitefield, Bangalore 560066',
-    paymentStatus: 'Pending', fulfillmentStatus: 'Processing', invoiceId: 'INV-2049', notes: 'Priority delivery requested.',
+    billingAddress: 'B-72, Wagle Industrial Estate, Road No. 33, Thane 400604',
+    shippingAddress: 'DMart Regional Distribution Center, Kalamboli, Navi Mumbai 410218',
+    paymentStatus: 'Pending', fulfillmentStatus: 'Processing', invoiceId: 'INV-2049', notes: 'Priority delivery ahead of Ganesh Chaturthi festive surge.',
   },
   {
     id: 'ORD-1050', customerId: 'c4',
-    items: [{ productId: 'p1', quantity: 5, unitPrice: 48000, discount: 10 }],
-    subtotal: 240000, tax: 43200, discount: 24000, total: 259200,
+    items: [{ productId: 'p1', quantity: 350, unitPrice: 1440, discount: 10 }, { productId: 'p6', quantity: 40, unitPrice: 5160, discount: 8 }],
+    subtotal: 710400, tax: 35520, discount: 66912, total: 679008,
     orderDate: '2025-09-02', salesperson: 'Priya Shah',
-    billingAddress: '78, Anna Salai, Chennai 600002',
-    shippingAddress: '78, Anna Salai, Chennai 600002',
-    paymentStatus: 'Paid', fulfillmentStatus: 'Confirmed', invoiceId: 'INV-2050', notes: '',
+    billingAddress: '26/3, Industrial Suburb, Yeshwantpur, Bangalore 560022',
+    shippingAddress: 'Metro Cash & Carry Wholesale Hub, Whitefield, Bangalore 560066',
+    paymentStatus: 'Paid', fulfillmentStatus: 'Confirmed', invoiceId: 'INV-2050', notes: 'B2B institutional bulk pallet dispatch.',
   },
   {
     id: 'ORD-1047', customerId: 'c5',
-    items: [{ productId: 'p5', quantity: 3, unitPrice: 84000, discount: 12 }],
-    subtotal: 252000, tax: 45360, discount: 30240, total: 267120,
+    items: [{ productId: 'p2', quantity: 25, unitPrice: 13200, discount: 10 }, { productId: 'p7', quantity: 50, unitPrice: 3600, discount: 10 }],
+    subtotal: 510000, tax: 25500, discount: 51000, total: 484500,
     orderDate: '2025-08-15', salesperson: 'Rahul Sharma',
-    billingAddress: '15, Nehru Place, New Delhi 110019',
-    shippingAddress: '15, Nehru Place, New Delhi 110019',
-    paymentStatus: 'Pending', fulfillmentStatus: 'Shipped', invoiceId: 'INV-2047', notes: 'Volume discount applied.',
+    billingAddress: '15, Okhla Industrial Area Phase III, New Delhi 110020',
+    shippingAddress: 'Swiggy Instamart North Hub, Kundli, Sonipat, HR 131028',
+    paymentStatus: 'Pending', fulfillmentStatus: 'Shipped', invoiceId: 'INV-2047', notes: 'Dark store instant inventory stock transfer.',
   },
   {
     id: 'ORD-1046', customerId: 'c6',
-    items: [{ productId: 'p4', quantity: 2, unitPrice: 60000, discount: 0 }, { productId: 'p2', quantity: 1, unitPrice: 36000, discount: 0 }],
-    subtotal: 156000, tax: 28080, discount: 0, total: 184080,
+    items: [{ productId: 'p2', quantity: 30, unitPrice: 13200, discount: 8 }, { productId: 'p4', quantity: 40, unitPrice: 3840, discount: 5 }],
+    subtotal: 549600, tax: 27480, discount: 39360, total: 537720,
     orderDate: '2025-08-30', salesperson: 'Rahul Sharma',
-    billingAddress: 'Level 8, HITEC City, Hyderabad 500081',
-    shippingAddress: 'Level 8, HITEC City, Hyderabad 500081',
-    paymentStatus: 'Paid', fulfillmentStatus: 'Delivered', invoiceId: 'INV-2046', notes: '',
+    billingAddress: 'Level 8, HITEC City, Madhapur, Hyderabad 500081',
+    shippingAddress: 'Cafe Coffee Day Commissary Hub, Hosur Road, Bangalore 560068',
+    paymentStatus: 'Paid', fulfillmentStatus: 'Delivered', invoiceId: 'INV-2046', notes: 'Institutional HoReCa master monthly contract.',
   },
 ];
 
@@ -493,167 +507,230 @@ export const salesOrders: SalesOrder[] = [
 
 export const quotations: Quotation[] = [
   {
-    id: 'QT-1082', leadId: 'l1', customerId: undefined,
-    items: [{ productId: 'p1', quantity: 2, unitPrice: 48000, discount: 5 }, { productId: 'p2', quantity: 1, unitPrice: 36000, discount: 5 }],
-    total: 123480, createdDate: '2025-08-10', expiryDate: '2025-09-10',
-    salesperson: 'Priya Shah', status: 'Viewed', notes: 'Revised pricing pending.',
+    id: 'QT-1085', customerId: 'c1', leadId: undefined,
+    items: [
+      { productId: 'p1', quantity: 300, unitPrice: 1440, discount: 8 },
+      { productId: 'p2', quantity: 20, unitPrice: 13200, discount: 5 }
+    ],
+    total: 661248, createdDate: '2025-09-02', expiryDate: '2025-10-02',
+    salesperson: 'Rahul Sharma', status: 'Draft', notes: 'Q4 Modern Trade master agreement for Reliance Retail stores.',
+  },
+  {
+    id: 'QT-1084', customerId: 'c2', leadId: undefined,
+    items: [
+      { productId: 'p3', quantity: 200, unitPrice: 1920, discount: 10 },
+      { productId: 'p4', quantity: 80, unitPrice: 3840, discount: 5 }
+    ],
+    total: 638208, createdDate: '2025-08-28', expiryDate: '2025-09-28',
+    salesperson: 'Priya Shah', status: 'Viewed', notes: 'Under commercial evaluation by DMart central FMCG purchasing team.',
   },
   {
     id: 'QT-1083', leadId: 'l3', customerId: undefined,
-    items: [{ productId: 'p5', quantity: 2, unitPrice: 84000, discount: 12 }, { productId: 'p4', quantity: 1, unitPrice: 60000, discount: 5 }],
-    total: 205920, createdDate: '2025-07-25', expiryDate: '2025-09-25',
-    salesperson: 'Rahul Sharma', status: 'Sent', notes: 'Custom enterprise package.',
+    items: [
+      { productId: 'p4', quantity: 500, unitPrice: 3840, discount: 12 },
+      { productId: 'p6', quantity: 100, unitPrice: 5160, discount: 10 }
+    ],
+    total: 2154240, createdDate: '2025-08-25', expiryDate: '2025-09-25',
+    salesperson: 'Rahul Sharma', status: 'Sent', notes: 'Bulk festive order of Nestlé Milkmaid condensed milk for sweet making.',
+  },
+  {
+    id: 'QT-1082', leadId: 'l1', customerId: undefined,
+    items: [
+      { productId: 'p1', quantity: 400, unitPrice: 1440, discount: 10 },
+      { productId: 'p3', quantity: 150, unitPrice: 1920, discount: 8 }
+    ],
+    total: 783744, createdDate: '2025-08-10', expiryDate: '2025-09-10',
+    salesperson: 'Priya Shah', status: 'Viewed', notes: 'Zepto Dark Store expansion quote for 18 regional micro-hubs.',
+  },
+  {
+    id: 'QT-1081', customerId: 'c4', leadId: undefined,
+    items: [
+      { productId: 'p1', quantity: 500, unitPrice: 1440, discount: 12 },
+      { productId: 'p2', quantity: 30, unitPrice: 13200, discount: 8 }
+    ],
+    total: 998016, createdDate: '2025-08-18', expiryDate: '2025-09-18',
+    salesperson: 'Priya Shah', status: 'Accepted', notes: 'Approved by Metro Wholesale category manager. Ready for invoicing.',
   },
   {
     id: 'QT-1080', leadId: undefined, customerId: 'c3',
-    items: [{ productId: 'p2', quantity: 1, unitPrice: 36000, discount: 0 }],
-    total: 36000, createdDate: '2025-08-20', expiryDate: '2025-09-20',
-    salesperson: 'Priya Shah', status: 'Accepted', notes: '',
+    items: [
+      { productId: 'p3', quantity: 100, unitPrice: 1920, discount: 5 }
+    ],
+    total: 182400, createdDate: '2025-08-20', expiryDate: '2025-09-20',
+    salesperson: 'Priya Shah', status: 'Accepted', notes: 'KitKat flash sale replenishment for Blinkit Gurgaon dark stores.',
   },
   {
     id: 'QT-1079', leadId: undefined, customerId: 'c7',
-    items: [{ productId: 'p1', quantity: 1, unitPrice: 48000, discount: 5 }],
-    total: 45600, createdDate: '2025-07-01', expiryDate: '2025-08-01',
-    salesperson: 'Priya Shah', status: 'Expired', notes: '',
+    items: [
+      { productId: 'p5', quantity: 50, unitPrice: 5400, discount: 5 }
+    ],
+    total: 256500, createdDate: '2025-07-01', expiryDate: '2025-08-01',
+    salesperson: 'Priya Shah', status: 'Expired', notes: 'Expired quotation for Cerelac seasonal buffer stock.',
+  },
+  {
+    id: 'QT-1078', customerId: 'c5', leadId: undefined,
+    items: [
+      { productId: 'p2', quantity: 40, unitPrice: 13200, discount: 15 }
+    ],
+    total: 448800, createdDate: '2025-07-15', expiryDate: '2025-08-15',
+    salesperson: 'Rahul Sharma', status: 'Rejected', notes: 'Client requested higher distributor margins on Nescafé glass jars.',
+  },
+  {
+    id: 'QT-1077', leadId: 'l2', customerId: undefined,
+    items: [
+      { productId: 'p2', quantity: 25, unitPrice: 13200, discount: 8 },
+      { productId: 'p7', quantity: 30, unitPrice: 3600, discount: 8 }
+    ],
+    total: 403104, createdDate: '2025-08-05', expiryDate: '2025-09-05',
+    salesperson: 'Priya Shah', status: 'Sent', notes: 'Taj Hotels beverage tasting proposal.',
+  },
+  {
+    id: 'QT-1076', customerId: 'c6', leadId: undefined,
+    items: [
+      { productId: 'p6', quantity: 60, unitPrice: 5160, discount: 10 }
+    ],
+    total: 278640, createdDate: '2025-08-12', expiryDate: '2025-09-12',
+    salesperson: 'Rahul Sharma', status: 'Accepted', notes: 'Everyday Dairy Whitener vending supply contract signed.',
   },
 ];
 
 // ─── Invoices ─────────────────────────────────────────────────────────────────
 
 export const invoices: Invoice[] = [
-  { id: 'INV-2048', orderId: 'ORD-1048', customerId: 'c1', amount: 233520, issueDate: '2025-08-28', dueDate: '2025-09-27', status: 'Partially Paid', items: [] },
-  { id: 'INV-2049', orderId: 'ORD-1049', customerId: 'c2', amount: 262800, issueDate: '2025-09-01', dueDate: '2025-10-01', status: 'Sent', items: [] },
-  { id: 'INV-2050', orderId: 'ORD-1050', customerId: 'c4', amount: 259200, issueDate: '2025-09-02', dueDate: '2025-10-02', status: 'Paid', items: [] },
-  { id: 'INV-2047', orderId: 'ORD-1047', customerId: 'c5', amount: 267120, issueDate: '2025-08-15', dueDate: '2025-09-15', status: 'Overdue', items: [] },
-  { id: 'INV-2046', orderId: 'ORD-1046', customerId: 'c6', amount: 184080, issueDate: '2025-08-30', dueDate: '2025-09-29', status: 'Paid', items: [] },
-  { id: 'INV-2044', orderId: 'ORD-1044', customerId: 'c3', amount: 47778, issueDate: '2025-08-10', dueDate: '2025-09-09', status: 'Overdue', items: [] },
-  { id: 'INV-2043', orderId: 'ORD-1043', customerId: 'c7', amount: 40000, issueDate: '2025-07-10', dueDate: '2025-08-09', status: 'Overdue', items: [] },
+  { id: 'INV-2048', orderId: 'ORD-1048', customerId: 'c1', amount: 486000, issueDate: '2025-08-28', dueDate: '2025-09-27', status: 'Paid', items: [] },
+  { id: 'INV-2049', orderId: 'ORD-1049', customerId: 'c2', amount: 509760, issueDate: '2025-09-01', dueDate: '2025-10-01', status: 'Sent', items: [] },
+  { id: 'INV-2050', orderId: 'ORD-1050', customerId: 'c4', amount: 679008, issueDate: '2025-09-02', dueDate: '2025-10-02', status: 'Paid', items: [] },
+  { id: 'INV-2047', orderId: 'ORD-1047', customerId: 'c5', amount: 484500, issueDate: '2025-08-15', dueDate: '2025-09-15', status: 'Overdue', items: [] },
+  { id: 'INV-2046', orderId: 'ORD-1046', customerId: 'c6', amount: 537720, issueDate: '2025-08-30', dueDate: '2025-09-29', status: 'Paid', items: [] },
+  { id: 'INV-2044', orderId: 'ORD-1044', customerId: 'c3', amount: 182400, issueDate: '2025-08-10', dueDate: '2025-09-09', status: 'Overdue', items: [] },
+  { id: 'INV-2043', orderId: 'ORD-1043', customerId: 'c7', amount: 125000, issueDate: '2025-07-10', dueDate: '2025-08-09', status: 'Overdue', items: [] },
 ];
 
 // ─── Payments ─────────────────────────────────────────────────────────────────
 
 export const payments: Payment[] = [
-  { id: 'PAY-0091', customerId: 'c4', invoiceId: 'INV-2050', amount: 259200, method: 'Bank Transfer', date: '2025-09-02', reference: 'NEFT/2025/09/4521', status: 'Completed' },
-  { id: 'PAY-0090', customerId: 'c6', invoiceId: 'INV-2046', amount: 184080, method: 'UPI', date: '2025-08-31', reference: 'UPI/REF/8821', status: 'Completed' },
-  { id: 'PAY-0089', customerId: 'c1', invoiceId: 'INV-2048', amount: 49520, method: 'Bank Transfer', date: '2025-09-01', reference: 'RTGS/2025/09/1122', status: 'Completed' },
-  { id: 'PAY-0088', customerId: 'c2', invoiceId: 'INV-2042', amount: 180000, method: 'Bank Transfer', date: '2025-08-25', reference: 'NEFT/2025/08/7731', status: 'Completed' },
+  { id: 'PAY-0091', customerId: 'c4', invoiceId: 'INV-2050', amount: 679008, method: 'Bank Transfer', date: '2025-09-02', reference: 'NEFT/2025/09/4521', status: 'Completed' },
+  { id: 'PAY-0090', customerId: 'c6', invoiceId: 'INV-2046', amount: 537720, method: 'UPI', date: '2025-08-31', reference: 'UPI/REF/8821', status: 'Completed' },
+  { id: 'PAY-0089', customerId: 'c1', invoiceId: 'INV-2048', amount: 486000, method: 'Bank Transfer', date: '2025-09-01', reference: 'RTGS/2025/09/1122', status: 'Completed' },
+  { id: 'PAY-0088', customerId: 'c2', invoiceId: 'INV-2042', amount: 350000, method: 'Bank Transfer', date: '2025-08-25', reference: 'NEFT/2025/08/7731', status: 'Completed' },
 ];
 
 // ─── Expenses ─────────────────────────────────────────────────────────────────
 
 export const expenses: Expense[] = [
-  { id: 'EXP-0201', category: 'Marketing', description: 'Q3 Social Media Ad Spend', amount: 85000, date: '2025-09-01', department: 'Marketing', submittedBy: 'Kavya Nair', status: 'Approved' },
-  { id: 'EXP-0200', category: 'Travel', description: 'Sales team Mumbai visit', amount: 24000, date: '2025-08-28', department: 'Sales', submittedBy: 'Rahul Sharma', status: 'Approved' },
-  { id: 'EXP-0199', category: 'Operations', description: 'Server infrastructure upgrade', amount: 120000, date: '2025-08-20', department: 'IT', submittedBy: 'Arjun Mehta', status: 'Approved' },
-  { id: 'EXP-0198', category: 'Utilities', description: 'Office electricity & internet', amount: 18500, date: '2025-08-01', department: 'Admin', submittedBy: 'Admin Team', status: 'Approved' },
-  { id: 'EXP-0197', category: 'Marketing', description: 'Print collateral for BizTech Expo', amount: 32000, date: '2025-07-25', department: 'Marketing', submittedBy: 'Kavya Nair', status: 'Approved' },
-  { id: 'EXP-0196', category: 'Travel', description: 'Bangalore client meetings', amount: 18000, date: '2025-08-15', department: 'Sales', submittedBy: 'Priya Shah', status: 'Pending' },
+  { id: 'EXP-0201', category: 'Marketing', description: 'Monsoon Maggi & Tea Retail POP Ad Displays', amount: 145000, date: '2025-09-01', department: 'Marketing', submittedBy: 'Kavya Nair', status: 'Approved' },
+  { id: 'EXP-0200', category: 'Operations', description: 'Refrigerated Cold Chain Reefer Logistics', amount: 84000, date: '2025-08-28', department: 'Operations', submittedBy: 'Vikram Rao', status: 'Approved' },
+  { id: 'EXP-0199', category: 'Procurement', description: 'FSSAI Statutory Lab Testing & Batch Quality QA', amount: 62000, date: '2025-08-20', department: 'QA & Compliance', submittedBy: 'Sanjay Kumar', status: 'Approved' },
+  { id: 'EXP-0198', category: 'Utilities', description: 'Gurugram HQ & Cold Warehouse Electricity', amount: 48500, date: '2025-08-01', department: 'Admin', submittedBy: 'Admin Team', status: 'Approved' },
+  { id: 'EXP-0197', category: 'Marketing', description: 'Modern Trade Endcap Branding at Reliance & DMart', amount: 112000, date: '2025-07-25', department: 'Marketing', submittedBy: 'Kavya Nair', status: 'Approved' },
+  { id: 'EXP-0196', category: 'Travel', description: 'National Sales Key Account Modern Trade Tour', amount: 38000, date: '2025-08-15', department: 'Sales', submittedBy: 'Rahul Sharma', status: 'Pending' },
 ];
 
 // ─── Suppliers ────────────────────────────────────────────────────────────────
 
 export const suppliers: Supplier[] = [
-  { id: 's1', name: 'TechSource India', contactPerson: 'Nikhil Mehta', email: 'nikhil@techsource.in', phone: '+91 98112 34567', category: 'Software Licensing', products: ['Enterprise CRM Suite', 'Business Analytics Pro', 'AI Assistant Pro'], totalOrders: 24, totalPurchase: 1840000, outstanding: 120000, rating: 4.8, status: 'Active', leadTime: 7 },
-  { id: 's2', name: 'Global Components', contactPerson: 'Rekha Das', email: 'rekha@globalcomp.in', phone: '+91 97223 45678', category: 'Hardware & Infrastructure', products: ['Inventory Management Module'], totalOrders: 18, totalPurchase: 960000, outstanding: 0, rating: 4.2, status: 'Active', leadTime: 14 },
-  { id: 's3', name: 'Prime Distribution', contactPerson: 'Syed Ali', email: 'syed@primedist.in', phone: '+91 96334 56789', category: 'ERP Solutions', products: ['Cloud ERP Package'], totalOrders: 12, totalPurchase: 1120000, outstanding: 85000, rating: 4.5, status: 'Active', leadTime: 10 },
+  { id: 's1', name: 'National Dairy Cooperatives & Milk Union', contactPerson: 'Dr. Verghese Patel', email: 'procurement@dairy-coop.in', phone: '+91 98112 34567', category: 'Dairy Solids & Milk Sourcing', products: ['Nestlé Milkmaid Sweetened Condensed Milk', 'Nestlé Everyday Dairy Whitener', 'KitKat Milk Chocolate Wafer'], totalOrders: 54, totalPurchase: 4840000, outstanding: 220000, rating: 4.9, status: 'Active', leadTime: 4 },
+  { id: 's2', name: 'Karnataka Planters Green Coffee Estate', contactPerson: 'Ramesh Gowda', email: 'estate@coffeegrowers.in', phone: '+91 97223 45678', category: 'Raw Coffee Beans & Tea Extracts', products: ['Nescafé Classic Instant Coffee', 'Nestea Lemon Instant Iced Tea Mix'], totalOrders: 38, totalPurchase: 3660000, outstanding: 0, rating: 4.8, status: 'Active', leadTime: 6 },
+  { id: 's3', name: 'Punjab Golden Wheat Agro Flour Mills', contactPerson: 'Harpreet Singh', email: 'sales@goldenwheat.in', phone: '+91 96334 56789', category: 'Wheat Flour & Cereal Grains', products: ['Maggi 2-Minute Masala Noodles', 'Nestlé Cerelac Fortified Baby Cereal'], totalOrders: 42, totalPurchase: 2980000, outstanding: 145000, rating: 4.7, status: 'Active', leadTime: 5 },
+  { id: 's4', name: 'Huhtamaki & TetraPak Packaging Systems', contactPerson: 'Sunita Kapoor', email: 'orders@asepticpack.in', phone: '+91 95445 67890', category: 'Food-Grade Cartons, Foils & Tins', products: ['Corrugated Shipping Cartons', 'Aseptic Barrier Pouches', 'Tinplate Cans'], totalOrders: 31, totalPurchase: 1840000, outstanding: 85000, rating: 4.6, status: 'Active', leadTime: 7 },
 ];
 
 // ─── Purchase Orders ──────────────────────────────────────────────────────────
 
 export const purchaseOrders: PurchaseOrder[] = [
-  { id: 'PO-0481', supplierId: 's1', items: [{ productId: 'p2', quantity: 30, unitCost: 14000 }], total: 420000, orderDate: '2025-08-25', expectedDate: '2025-09-01', status: 'Received' },
-  { id: 'PO-0482', supplierId: 's2', items: [{ productId: 'p3', quantity: 20, unitCost: 9000 }], total: 180000, orderDate: '2025-09-01', expectedDate: '2025-09-15', status: 'Confirmed' },
-  { id: 'PO-0483', supplierId: 's1', items: [{ productId: 'p4', quantity: 25, unitCost: 22000 }], total: 550000, orderDate: '2025-09-03', expectedDate: '2025-09-10', status: 'Sent' },
-  { id: 'PO-0480', supplierId: 's3', items: [{ productId: 'p5', quantity: 15, unitCost: 32000 }], total: 480000, orderDate: '2025-08-10', expectedDate: '2025-08-20', status: 'Received' },
+  { id: 'PO-0481', supplierId: 's2', items: [{ productId: 'p2', quantity: 50, unitCost: 8400 }], total: 420000, orderDate: '2025-08-25', expectedDate: '2025-09-01', status: 'Received' },
+  { id: 'PO-0482', supplierId: 's3', items: [{ productId: 'p1', quantity: 300, unitCost: 960 }], total: 288000, orderDate: '2025-09-01', expectedDate: '2025-09-15', status: 'Confirmed' },
+  { id: 'PO-0483', supplierId: 's1', items: [{ productId: 'p4', quantity: 120, unitCost: 2600 }], total: 312000, orderDate: '2025-09-03', expectedDate: '2025-09-10', status: 'Sent' },
+  { id: 'PO-0480', supplierId: 's1', items: [{ productId: 'p6', quantity: 150, unitCost: 3500 }], total: 525000, orderDate: '2025-08-10', expectedDate: '2025-08-20', status: 'Received' },
 ];
 
 // ─── Campaigns ────────────────────────────────────────────────────────────────
 
 export const campaigns: Campaign[] = [
-  { id: 'camp1', name: 'Retail Growth Campaign', platform: 'Multi-platform', startDate: '2025-07-01', endDate: '2025-09-30', reach: 124000, engagement: 9840, leads: 186, conversions: 22, revenue: 1240000, roi: 4.8, status: 'Active', budget: 180000, spend: 142000 },
-  { id: 'camp2', name: 'Wholesale Partner Campaign', platform: 'Instagram', startDate: '2025-07-15', endDate: '2025-09-15', reach: 84200, engagement: 6420, leads: 126, conversions: 12, revenue: 840000, roi: 3.9, status: 'Active', budget: 120000, spend: 98000 },
-  { id: 'camp3', name: 'Enterprise B2B — LinkedIn', platform: 'LinkedIn', startDate: '2025-06-01', endDate: '2025-08-31', reach: 42600, engagement: 3180, leads: 64, conversions: 8, revenue: 1920000, roi: 7.2, status: 'Completed', budget: 200000, spend: 186000 },
-  { id: 'camp4', name: 'Distributor Outreach', platform: 'Facebook', startDate: '2025-08-01', endDate: '2025-10-31', reach: 62000, engagement: 4820, leads: 98, conversions: 6, revenue: 620000, roi: 2.8, status: 'Active', budget: 150000, spend: 68000 },
+  { id: 'camp1', name: 'Monsoon Maggi & Tea Retail Blitz', platform: 'Multi-platform', startDate: '2025-07-01', endDate: '2025-09-30', reach: 384000, engagement: 29840, leads: 246, conversions: 38, revenue: 3240000, roi: 5.8, status: 'Active', budget: 280000, spend: 212000 },
+  { id: 'camp2', name: 'Nescafé Cold Coffee Youth Drive', platform: 'Instagram', startDate: '2025-07-15', endDate: '2025-09-15', reach: 245000, engagement: 18420, leads: 186, conversions: 24, revenue: 1840000, roi: 4.6, status: 'Active', budget: 180000, spend: 148000 },
+  { id: 'camp3', name: 'B2B Modern Trade Wholesale Push', platform: 'LinkedIn', startDate: '2025-06-01', endDate: '2025-08-31', reach: 82600, engagement: 6180, leads: 94, conversions: 14, revenue: 2920000, roi: 8.2, status: 'Completed', budget: 200000, spend: 186000 },
+  { id: 'camp4', name: 'Quick Commerce Instant Grocery Push', platform: 'Facebook', startDate: '2025-08-01', endDate: '2025-10-31', reach: 162000, engagement: 12820, leads: 158, conversions: 18, revenue: 1420000, roi: 3.8, status: 'Active', budget: 190000, spend: 98000 },
 ];
 
 // ─── Social Posts ─────────────────────────────────────────────────────────────
 
 export const socialPosts: SocialPost[] = [
-  { id: 'sp1', title: 'How BizNexuz helps retailers scale', platform: 'Instagram', content: 'Manage inventory, track orders, and grow faster with BizNexuz. One platform for everything your retail business needs. 🚀', status: 'Published', publishDate: '2025-08-20', reach: 42800, likes: 1842, comments: 284, shares: 412, clicks: 2840, enquiries: 184, leadsGenerated: 126, qualifiedLeads: 48, conversions: 12, revenueAttributed: 840000, campaignId: 'camp2' },
-  { id: 'sp2', title: 'Enterprise CRM for growing businesses', platform: 'LinkedIn', content: 'BizNexuz delivers enterprise-grade CRM + ERP capabilities at a price point that makes sense for mid-market businesses. See how Nova Distributor grew their sales 40% in 6 months.', status: 'Published', publishDate: '2025-07-15', reach: 28400, likes: 642, comments: 128, shares: 84, clicks: 1420, enquiries: 96, leadsGenerated: 48, qualifiedLeads: 28, conversions: 6, revenueAttributed: 1200000, campaignId: 'camp3' },
-  { id: 'sp3', title: 'Q4 Wholesale Partnership Drive', platform: 'Facebook', content: 'Looking for a technology partner that understands wholesale distribution? BizNexuz is built for distributors and wholesalers who want to run smarter operations.', status: 'Scheduled', publishDate: '2025-09-10', reach: 0, likes: 0, comments: 0, shares: 0, clicks: 0, enquiries: 0, leadsGenerated: 0, qualifiedLeads: 0, conversions: 0, revenueAttributed: 0, campaignId: 'camp4' },
-  { id: 'sp4', title: 'AI-powered business insights', platform: 'Instagram', content: 'What if your business software could tell you what to do next? BizNexuz AI analyses your data and delivers actionable insights instantly. ✨', status: 'Draft', publishDate: '', reach: 0, likes: 0, comments: 0, shares: 0, clicks: 0, enquiries: 0, leadsGenerated: 0, qualifiedLeads: 0, conversions: 0, revenueAttributed: 0, campaignId: 'camp1' },
+  { id: 'sp1', title: '2-Minute Happiness: Fueling Monsoon Memories', platform: 'Instagram', content: 'Rains, friends, and steaming bowls of Maggi! Keep your store shelves stocked with the all-time favorite snack. Order master cartons directly on the Nestlé B2B portal. 🍜💛', status: 'Published', publishDate: '2025-08-20', reach: 142800, likes: 6842, comments: 884, shares: 1412, clicks: 8840, enquiries: 384, leadsGenerated: 186, qualifiedLeads: 88, conversions: 28, revenueAttributed: 1840000, campaignId: 'camp2' },
+  { id: 'sp2', title: 'Start Fresh with Nescafé Classic Instant Coffee', platform: 'LinkedIn', content: 'Over 80% of India’s corporate offices start their mornings with Nescafé. Learn how Nestlé Foodservice solutions power executive vending across Tier 1 campuses.', status: 'Published', publishDate: '2025-07-15', reach: 48400, likes: 1642, comments: 328, shares: 184, clicks: 3420, enquiries: 196, leadsGenerated: 94, qualifiedLeads: 58, conversions: 14, revenueAttributed: 1920000, campaignId: 'camp3' },
+  { id: 'sp3', title: 'KitKat Break Time Festival Offer', platform: 'Facebook', content: 'Have a break, have a KitKat! Stock up your supermarket confectionery displays ahead of the festive season with exclusive wholesale bulk trade margins.', status: 'Scheduled', publishDate: '2025-09-10', reach: 0, likes: 0, comments: 0, shares: 0, clicks: 0, enquiries: 0, leadsGenerated: 0, qualifiedLeads: 0, conversions: 0, revenueAttributed: 0, campaignId: 'camp4' },
+  { id: 'sp4', title: 'Pure Culinary Magic with Nestlé Milkmaid', platform: 'Instagram', content: 'From creamy kheer to celebration cakes, Milkmaid brings festive desserts to life. Bulk trays now available with fast 24-hour dispatch for bakeries and sweet makers. ✨', status: 'Draft', publishDate: '', reach: 0, likes: 0, comments: 0, shares: 0, clicks: 0, enquiries: 0, leadsGenerated: 0, qualifiedLeads: 0, conversions: 0, revenueAttributed: 0, campaignId: 'camp1' },
 ];
 
 // ─── Documents ────────────────────────────────────────────────────────────────
 
 export const documents: Document[] = [
-  { id: 'd1', name: 'Q2 Sales Report 2025.pdf', category: 'Report', size: '2.4 MB', uploadedBy: 'Aisha Khan', uploadedDate: '2025-07-05', status: 'Indexed', linkedTo: '' },
-  { id: 'd2', name: 'Acme Corporation Contract.pdf', category: 'Contract', size: '1.8 MB', uploadedBy: 'Arjun Mehta', uploadedDate: '2025-03-20', status: 'Indexed', linkedTo: 'c1' },
-  { id: 'd3', name: 'INV-2048 Invoice.pdf', category: 'Invoice', size: '0.4 MB', uploadedBy: 'Neha Patel', uploadedDate: '2025-08-28', status: 'Indexed', linkedTo: 'INV-2048' },
-  { id: 'd4', name: 'QT-1083 Quotation.pdf', category: 'Quotation', size: '0.6 MB', uploadedBy: 'Rahul Sharma', uploadedDate: '2025-07-25', status: 'Indexed', linkedTo: 'QT-1083' },
-  { id: 'd5', name: 'Supplier Agreement — TechSource.pdf', category: 'Contract', size: '3.1 MB', uploadedBy: 'Sanjay Kumar', uploadedDate: '2025-01-15', status: 'Indexed', linkedTo: 's1' },
-  { id: 'd6', name: 'H1 Finance Summary.pdf', category: 'Report', size: '1.2 MB', uploadedBy: 'Neha Patel', uploadedDate: '2025-07-20', status: 'Indexed', linkedTo: '' },
-  { id: 'd7', name: 'PO-0483 Purchase Order.pdf', category: 'Purchase Order', size: '0.3 MB', uploadedBy: 'Sanjay Kumar', uploadedDate: '2025-09-03', status: 'Processing', linkedTo: 'PO-0483' },
+  { id: 'd1', name: 'FSSAI Central Food Safety Audit Report 2025.pdf', category: 'Report', size: '3.4 MB', uploadedBy: 'Aisha Khan', uploadedDate: '2025-07-05', status: 'Indexed', linkedTo: '' },
+  { id: 'd2', name: 'Reliance Retail Master Supply Agreement.pdf', category: 'Contract', size: '2.8 MB', uploadedBy: 'Suresh Narayanan', uploadedDate: '2025-03-20', status: 'Indexed', linkedTo: 'c1' },
+  { id: 'd3', name: 'INV-2048 FMCG Dispatch Invoice.pdf', category: 'Invoice', size: '0.4 MB', uploadedBy: 'Neha Patel', uploadedDate: '2025-08-28', status: 'Indexed', linkedTo: 'INV-2048' },
+  { id: 'd4', name: 'QT-1083 Haldiram Bulk Milkmaid Quotation.pdf', category: 'Quotation', size: '0.6 MB', uploadedBy: 'Rahul Sharma', uploadedDate: '2025-07-25', status: 'Indexed', linkedTo: 'QT-1083' },
+  { id: 'd5', name: 'National Dairy Union Procurement Agreement.pdf', category: 'Contract', size: '3.1 MB', uploadedBy: 'Sanjay Kumar', uploadedDate: '2025-01-15', status: 'Indexed', linkedTo: 's1' },
+  { id: 'd6', name: 'Q2 Modern Trade Revenue & Margins Summary.pdf', category: 'Report', size: '1.9 MB', uploadedBy: 'Neha Patel', uploadedDate: '2025-07-20', status: 'Indexed', linkedTo: '' },
+  { id: 'd7', name: 'PO-0483 Condensed Milk Purchase Order.pdf', category: 'Purchase Order', size: '0.3 MB', uploadedBy: 'Sanjay Kumar', uploadedDate: '2025-09-03', status: 'Processing', linkedTo: 'PO-0483' },
 ];
 
 // ─── Notifications ────────────────────────────────────────────────────────────
 
 export const notifications: Notification[] = [
-  { id: 'n1', type: 'lead', title: 'New distributor lead received', message: 'Nova Distributor has entered negotiation stage. Potential value: ₹12L', time: '10 min ago', read: false },
-  { id: 'n2', type: 'invoice', title: 'Invoice overdue', message: 'INV-2047 for Vertex Solutions (₹2.67L) is 18 days overdue.', time: '1 hour ago', read: false },
-  { id: 'n3', type: 'stock', title: 'Low stock alert', message: 'Business Analytics Pro is below reorder level (8 units remaining).', time: '2 hours ago', read: false },
-  { id: 'n4', type: 'campaign', title: 'Campaign milestone', message: 'Wholesale Partner Campaign has generated 126 leads this month.', time: '4 hours ago', read: true },
-  { id: 'n5', type: 'quotation', title: 'Quotation accepted', message: 'QT-1080 for Orbit Technologies has been accepted. Create order now.', time: '1 day ago', read: true },
-  { id: 'n6', type: 'order', title: 'Order delivered', message: 'ORD-1046 for CloudPeak Labs has been delivered successfully.', time: '1 day ago', read: true },
+  { id: 'n1', type: 'lead', title: 'New quick-commerce grocery lead', message: 'Zepto Quick Grocery Hubs has submitted a master tender for Maggi & Nescafé lines. Projected: ₹14.8L', time: '10 min ago', read: false },
+  { id: 'n2', type: 'stock', title: 'Cold-chain inventory alert', message: 'Nestlé Cerelac Wheat & Apple inventory is at 310 cases (reorder threshold 50).', time: '1 hour ago', read: false },
+  { id: 'n3', type: 'invoice', title: 'Modern trade invoice payment cleared', message: 'Reliance Retail cleared ₹4.84L via RTGS for ORD-1048.', time: '2 hours ago', read: false },
+  { id: 'n4', type: 'campaign', title: 'Monsoon campaign milestone', message: 'Monsoon Maggi & Tea Retail Blitz reached 3.84L retail store managers.', time: '4 hours ago', read: true },
+  { id: 'n5', type: 'quotation', title: 'HoReCa quotation accepted', message: 'QT-1080 for Chaayos Institutional Supply accepted. Dispatch pending.', time: '1 day ago', read: true },
+  { id: 'n6', type: 'order', title: 'Wholesale order delivered', message: 'ORD-1046 (KitKat & Nescafé) delivered to Avenue Supermarts (DMart).', time: '1 day ago', read: true },
 ];
 
 // ─── Revenue trend (6 months) ─────────────────────────────────────────────────
 
 export const revenueTrend = [
-  { month: 'Apr', revenue: 1840000, expenses: 980000, profit: 860000 },
-  { month: 'May', revenue: 2120000, expenses: 1080000, profit: 1040000 },
-  { month: 'Jun', revenue: 2480000, expenses: 1240000, profit: 1240000 },
-  { month: 'Jul', revenue: 2280000, expenses: 1180000, profit: 1100000 },
-  { month: 'Aug', revenue: 2840000, expenses: 1320000, profit: 1520000 },
-  { month: 'Sep', revenue: 3120000, expenses: 1460000, profit: 1660000 },
+  { month: 'Apr', revenue: 3840000, expenses: 1980000, profit: 1860000 },
+  { month: 'May', revenue: 4120000, expenses: 2080000, profit: 2040000 },
+  { month: 'Jun', revenue: 4480000, expenses: 2240000, profit: 2240000 },
+  { month: 'Jul', revenue: 4280000, expenses: 2180000, profit: 2100000 },
+  { month: 'Aug', revenue: 4840000, expenses: 2320000, profit: 2520000 },
+  { month: 'Sep', revenue: 5320000, expenses: 2460000, profit: 2860000 },
 ];
 
 export const leadTrend = [
-  { month: 'Apr', new: 28, qualified: 14, converted: 5 },
-  { month: 'May', new: 34, qualified: 18, converted: 7 },
-  { month: 'Jun', new: 42, qualified: 24, converted: 9 },
-  { month: 'Jul', new: 38, qualified: 20, converted: 8 },
-  { month: 'Aug', new: 52, qualified: 28, converted: 11 },
-  { month: 'Sep', new: 48, qualified: 26, converted: 10 },
+  { month: 'Apr', new: 48, qualified: 28, converted: 12 },
+  { month: 'May', new: 54, qualified: 32, converted: 16 },
+  { month: 'Jun', new: 62, qualified: 38, converted: 19 },
+  { month: 'Jul', new: 58, qualified: 35, converted: 18 },
+  { month: 'Aug', new: 72, qualified: 44, converted: 24 },
+  { month: 'Sep', new: 68, qualified: 42, converted: 22 },
 ];
 
 export const leadsBySource = [
-  { source: 'Instagram', value: 126, color: '#E1306C' },
-  { source: 'Facebook', value: 84, color: '#1877F2' },
-  { source: 'LinkedIn', value: 64, color: '#0A66C2' },
-  { source: 'Website', value: 52, color: '#2563EB' },
-  { source: 'Sales Team', value: 38, color: '#16A34A' },
-  { source: 'Referral', value: 28, color: '#7C3AED' },
-  { source: 'Events', value: 18, color: '#F59E0B' },
-  { source: 'Other', value: 22, color: '#94A3B8' },
+  { source: 'Website', value: 186, color: '#2563EB' },
+  { source: 'Sales Team', value: 148, color: '#16A34A' },
+  { source: 'LinkedIn', value: 94, color: '#0A66C2' },
+  { source: 'Instagram', value: 84, color: '#E1306C' },
+  { source: 'Events & Expos', value: 58, color: '#F59E0B' },
+  { source: 'Referral', value: 42, color: '#7C3AED' },
+  { source: 'Facebook', value: 38, color: '#1877F2' },
+  { source: 'Other', value: 24, color: '#94A3B8' },
 ];
 
 export const salesByRegion = [
-  { region: 'Maharashtra', value: 2840000 },
-  { region: 'Karnataka', value: 1920000 },
-  { region: 'Delhi', value: 1680000 },
-  { region: 'Tamil Nadu', value: 1240000 },
-  { region: 'Telangana', value: 1120000 },
-  { region: 'Gujarat', value: 860000 },
+  { region: 'Maharashtra', value: 4840000 },
+  { region: 'Delhi NCR', value: 3680000 },
+  { region: 'Karnataka', value: 2920000 },
+  { region: 'Tamil Nadu', value: 2240000 },
+  { region: 'Gujarat', value: 1860000 },
+  { region: 'West Bengal', value: 1420000 },
 ];
 
 export const revenueByCategory = [
-  { name: 'CRM Suite', value: 4032000, color: '#2563EB' },
-  { name: 'Analytics Pro', value: 2232000, color: '#7C3AED' },
-  { name: 'AI Assistant', value: 2280000, color: '#8B5CF6' },
-  { name: 'Cloud ERP', value: 2436000, color: '#16A34A' },
-  { name: 'Inventory Mgmt', value: 1080000, color: '#F59E0B' },
+  { name: 'Instant Foods (Maggi)', value: 5820000, color: '#D97706' },
+  { name: 'Coffee & Beverages (Nescafé)', value: 4340000, color: '#92400E' },
+  { name: 'Dairy & Culinary (Milkmaid/Everyday)', value: 3680000, color: '#2563EB' },
+  { name: 'Confectionery (KitKat)', value: 3150000, color: '#DC2626' },
+  { name: 'Nutrition (Cerelac)', value: 2260000, color: '#16A34A' },
 ];
 
 export const conversionFunnel = [

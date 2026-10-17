@@ -4,7 +4,7 @@ import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts';
-import { Plus, Target, Filter, Search, ChevronRight, TrendingUp, Users, Zap, Globe } from 'lucide-react';
+import { Plus, Target, Filter, Search, ChevronRight, TrendingUp, Users, Zap, Globe, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import KPICard from '../components/ui/KPICard';
 import StatusBadge from '../components/ui/StatusBadge';
@@ -12,8 +12,8 @@ import AIInsightCard from '../components/ui/AIInsightCard';
 import Modal from '../components/ui/Modal';
 import AccessDenied from './AccessDenied';
 import {
-  leads, leadTrend, leadsBySource, conversionFunnel,
-  campaigns, socialPosts, formatCurrency,
+  leadTrend, leadsBySource, conversionFunnel,
+  campaigns, socialPosts, formatCurrency, type Lead,
 } from '../data/mockData';
 
 const STAGES = ['New', 'Contacted', 'Qualified', 'Proposal', 'Negotiation', 'Won', 'Lost'] as const;
@@ -33,12 +33,12 @@ const PIE_COLORS = ['#E1306C', '#1877F2', '#0A66C2', '#2563EB', '#16A34A', '#7C3
 
 const INITIAL_FORM = {
   companyName: '', contactPerson: '', email: '', phone: '', location: '',
-  leadType: 'Business', source: 'Website', stage: 'New', potentialValue: '',
-  priority: 'Medium', notes: '',
+  leadType: 'Business' as const, source: 'Website' as const, stage: 'New' as const, potentialValue: '',
+  priority: 'Medium' as const, notes: '',
 };
 
 export default function LeadsPipeline() {
-  const { hasModule } = useApp();
+  const { hasModule, leads, addLead, authMode } = useApp();
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [stageFilter, setStageFilter] = useState<Stage | 'All'>('All');
@@ -59,7 +59,7 @@ export default function LeadsPipeline() {
   const qualifiedLeads = leads.filter(l => l.stage === 'Qualified').length;
   const pipelineValue = leads.filter(l => !['Won', 'Lost'].includes(l.stage)).reduce((s, l) => s + l.potentialValue, 0);
   const wonLeads = leads.filter(l => l.stage === 'Won').length;
-  const conversionRate = Math.round((wonLeads / totalLeads) * 100);
+  const conversionRate = totalLeads > 0 ? Math.round((wonLeads / totalLeads) * 100) : 0;
   const socialLeads = leads.filter(l => ['Instagram', 'Facebook', 'LinkedIn'].includes(l.source)).length;
 
   const leadTypeData = [
@@ -80,6 +80,34 @@ export default function LeadsPipeline() {
     );
   };
 
+  const handleSaveLead = () => {
+    if (!form.companyName || !form.contactPerson) return;
+    const newL: Lead = {
+      id: `l-${Date.now()}`,
+      companyName: form.companyName.trim(),
+      contactPerson: form.contactPerson.trim(),
+      email: form.email.trim(),
+      phone: form.phone.trim(),
+      location: form.location.trim(),
+      leadType: form.leadType as any,
+      source: form.source as any,
+      stage: 'New',
+      potentialValue: Number(form.potentialValue) || 100000,
+      priority: form.priority as any,
+      assignedTo: 'Sales Team',
+      createdDate: new Date().toISOString().split('T')[0],
+      lastContactDate: new Date().toISOString().split('T')[0],
+      score: 65,
+      notes: form.notes.trim(),
+      activities: [],
+    };
+    addLead(newL);
+    setForm(INITIAL_FORM);
+    setAddOpen(false);
+  };
+
+  const isRealClean = authMode === 'real' && leads.length === 0;
+
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
@@ -96,16 +124,26 @@ export default function LeadsPipeline() {
       {/* KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-3">
         <KPICard title="Total Leads" value={`${totalLeads}`} icon={<Target size={16} />} accent="#2563eb" />
-        <KPICard title="New Leads" value={`${newLeads}`} change="+8 this week" changeDir="up" icon={<Plus size={16} />} accent="#f59e0b" />
+        <KPICard title="New Leads" value={`${newLeads}`} change={!isRealClean ? "+8 this week" : undefined} changeDir="up" icon={<Plus size={16} />} accent="#f59e0b" />
         <KPICard title="Qualified" value={`${qualifiedLeads}`} icon={<TrendingUp size={16} />} accent="#7c3aed" />
-        <KPICard title="Pipeline Value" value={formatCurrency(pipelineValue)} change="+12.6%" changeDir="up" icon={<TrendingUp size={16} />} accent="#16a34a" />
-        <KPICard title="Conversion Rate" value={`${conversionRate}%`} change="+2.1%" changeDir="up" icon={<Zap size={16} />} accent="#06b6d4" />
-        <KPICard title="Social Leads" value={`${socialLeads}`} change="3 platforms" icon={<Globe size={16} />} accent="#E1306C" />
+        <KPICard title="Pipeline Value" value={formatCurrency(pipelineValue)} change={!isRealClean ? "+12.6%" : undefined} changeDir="up" icon={<TrendingUp size={16} />} accent="#16a34a" />
+        <KPICard title="Conversion Rate" value={`${conversionRate}%`} change={!isRealClean ? "+2.1%" : undefined} changeDir="up" icon={<Zap size={16} />} accent="#06b6d4" />
+        <KPICard title="Social Leads" value={`${socialLeads}`} change={!isRealClean ? "3 platforms" : undefined} icon={<Globe size={16} />} accent="#E1306C" />
         <KPICard title="Distributors" value={`${leads.filter(l => l.leadType === 'Distributor').length}`} icon={<Users size={16} />} accent="#8b5cf6" />
       </div>
 
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      {/* Charts or Empty State */}
+      {isRealClean ? (
+        <div className="bg-white rounded-xl border border-slate-200 p-8 text-center">
+          <Target size={36} className="mx-auto mb-2 text-slate-300" />
+          <h3 className="font-semibold text-slate-700 text-sm">Pipeline is Clean & Ready</h3>
+          <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
+            No leads recorded yet. Click "+ Add Lead" to start logging prospects, retail inquiries, and distribution partners.
+          </p>
+        </div>
+      ) : (
+        <>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Lead Trend */}
         <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200 p-5">
           <h3 className="font-semibold text-slate-800 text-sm mb-1">Lead Generation Trend</h3>
@@ -232,7 +270,9 @@ export default function LeadsPipeline() {
         </div>
       </div>
 
-      {/* Pipeline Kanban */}
+      </>
+      )}
+
       <div>
         <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
           <h2 className="font-display font-bold text-slate-900">Lead Pipeline</h2>
@@ -319,7 +359,7 @@ export default function LeadsPipeline() {
         footer={
           <div className="flex justify-end gap-3">
             <button onClick={() => setAddOpen(false)} className="px-4 py-2 text-sm text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50">Cancel</button>
-            <button onClick={() => setAddOpen(false)} className="px-4 py-2 text-sm text-white rounded-xl font-medium" style={{ background: '#2563eb' }}>Save Lead</button>
+            <button onClick={handleSaveLead} disabled={!form.companyName || !form.contactPerson} className="px-4 py-2 text-sm text-white rounded-xl font-medium disabled:opacity-50" style={{ background: '#2563eb' }}>Save Lead</button>
           </div>
         }
       >

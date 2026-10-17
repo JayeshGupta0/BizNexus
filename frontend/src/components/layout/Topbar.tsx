@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router';
-import { Bell, Search, HelpCircle, Menu, X, ChevronRight, Sparkles } from 'lucide-react';
+import { Bell, Search, HelpCircle, Menu, X, ChevronRight, Sparkles, LogOut } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { customers, leads, products, salesOrders, invoices, documents } from '../../data/mockData';
 
@@ -71,6 +71,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
     setShowSearch,
     aiSidebarOpen,
     toggleAiSidebar,
+    logout,
   } = useApp();
   const [notifOpen, setNotifOpen] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
@@ -230,8 +231,20 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
         <span className="font-semibold">BN AI</span>
       </button>
 
-      <button className="p-2 rounded-xl transition-colors" style={{ color: '#8B5E3C' }} onMouseEnter={e => (e.currentTarget.style.background='#F0E6D8')} onMouseLeave={e => (e.currentTarget.style.background='transparent')}>
+      <button className="p-2 rounded-xl transition-colors" style={{ color: '#8B5E3C' }} onMouseEnter={e => (e.currentTarget.style.background='#F0E6D8')} onMouseLeave={e => (e.currentTarget.style.background='transparent')} title="Help & Support">
         <HelpCircle size={18} />
+      </button>
+
+      <button
+        onClick={() => {
+          logout();
+          navigate('/login');
+        }}
+        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-colors cursor-pointer"
+        title="Sign Out / Logout"
+      >
+        <LogOut size={14} />
+        <span className="hidden sm:inline">Logout</span>
       </button>
     </header>
   );

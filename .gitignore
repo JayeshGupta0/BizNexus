@@ -69,3 +69,8 @@ scratch/
 # Documents & PDFs
 *.pdf
 
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+

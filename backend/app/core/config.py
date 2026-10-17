@@ -19,7 +19,7 @@ class Settings(BaseModel):
     ]
     
     # Tech Stack References (SDG 9 & Academic Spec)
-    DATABASE_TYPE: str = "PostgreSQL"
+    DATABASE_TYPE: str = "SQLite (biznexus.db)"
     RAG_ORCHESTRATOR: str = "LangChain"
     VECTOR_DB: str = "ChromaDB"
     DOCUMENT_PARSER: str = "PyPDF"

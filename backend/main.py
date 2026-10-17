@@ -6,6 +6,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.api.routes import router as api_router
+from app.api.auth_routes import auth_router
+from app.services.database import init_db
+
+# Ensure DB tables exist on startup
+init_db()
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -22,8 +27,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Register API Router under /api
+# Register routers
 app.include_router(api_router, prefix=settings.API_PREFIX)
+app.include_router(auth_router, prefix=f"{settings.API_PREFIX}")
 
 @app.get("/")
 def root():
@@ -33,7 +39,7 @@ def root():
         "status": "online",
         "docs_url": "/docs",
         "tech_stack": {
-            "frontend": "React, Recharts, Vite, Tailwind CSS",
+            "frontend": "React, Recharts, Vite",
             "backend": "Python, FastAPI",
             "database": settings.DATABASE_TYPE,
             "vector_store": settings.VECTOR_DB,

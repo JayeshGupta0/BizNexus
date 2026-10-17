@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router';
 import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts';
 import {
   TrendingUp, Users, Target, DollarSign, Package, AlertTriangle,
   ShoppingCart, Sparkles, ArrowRight, Clock, ChevronRight,
+  BarChart2, PlusCircle, FileText, Layers,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import KPICard from '../components/ui/KPICard';
@@ -32,8 +33,9 @@ const ROLE_INSIGHTS: Record<string, string> = {
 };
 
 export default function Dashboard() {
-  const { currentUser, hasModule } = useApp();
+  const { currentUser, hasModule, authMode } = useApp();
   const navigate = useNavigate();
+  const isRealClean = authMode === 'real';
 
   const isOwner = currentUser.role === 'Business Owner';
   const isSalesMgr = currentUser.role === 'Sales Manager';
@@ -70,6 +72,101 @@ export default function Dashboard() {
       </div>
     );
   };
+
+  // Clean workspace welcome state for newly registered companies
+  if (isRealClean) {
+    return (
+      <div className="p-6 space-y-6">
+        <div className="flex items-start justify-between flex-wrap gap-4">
+          <div>
+            <h1 className="font-display text-2xl font-bold text-slate-900">
+              {greeting}, {currentUser.name.split(' ')[0]} 👋
+            </h1>
+            <p className="text-slate-500 mt-1 text-sm">Welcome to your new BizNexus workspace. Start by adding your data below.</p>
+          </div>
+          <button onClick={() => navigate('/ai-assistant')} className="flex items-center gap-2 px-4 py-2 rounded-xl text-white text-sm font-medium transition-opacity hover:opacity-90" style={{ background: '#7c3aed' }}>
+            <Sparkles size={15} /> Ask AI
+          </button>
+        </div>
+
+        {/* Empty-state onboarding cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+          {hasModule('leads') && (
+            <button onClick={() => navigate('/crm/leads')} className="group bg-white rounded-2xl border-2 border-dashed border-blue-200 hover:border-blue-400 p-6 text-left transition-all hover:shadow-md">
+              <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center mb-3 group-hover:bg-blue-200 transition-colors">
+                <Target size={20} className="text-blue-600" />
+              </div>
+              <div className="font-semibold text-slate-800 text-sm">Add your first Lead</div>
+              <div className="text-xs text-slate-400 mt-1">Track prospects and pipeline opportunities</div>
+              <div className="flex items-center gap-1 text-xs text-blue-600 font-medium mt-3">
+                <PlusCircle size={12} /> Get started
+              </div>
+            </button>
+          )}
+          {hasModule('customers') && (
+            <button onClick={() => navigate('/crm/customers')} className="group bg-white rounded-2xl border-2 border-dashed border-emerald-200 hover:border-emerald-400 p-6 text-left transition-all hover:shadow-md">
+              <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center mb-3 group-hover:bg-emerald-200 transition-colors">
+                <Users size={20} className="text-emerald-600" />
+              </div>
+              <div className="font-semibold text-slate-800 text-sm">Add your first Customer</div>
+              <div className="text-xs text-slate-400 mt-1">Manage customer accounts and revenue</div>
+              <div className="flex items-center gap-1 text-xs text-emerald-600 font-medium mt-3">
+                <PlusCircle size={12} /> Get started
+              </div>
+            </button>
+          )}
+          {hasModule('products') && (
+            <button onClick={() => navigate('/products')} className="group bg-white rounded-2xl border-2 border-dashed border-amber-200 hover:border-amber-400 p-6 text-left transition-all hover:shadow-md">
+              <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center mb-3 group-hover:bg-amber-200 transition-colors">
+                <Package size={20} className="text-amber-600" />
+              </div>
+              <div className="font-semibold text-slate-800 text-sm">Add your first Product</div>
+              <div className="text-xs text-slate-400 mt-1">Catalog your food & beverage products</div>
+              <div className="flex items-center gap-1 text-xs text-amber-600 font-medium mt-3">
+                <PlusCircle size={12} /> Get started
+              </div>
+            </button>
+          )}
+          {hasModule('sales-orders') && (
+            <button onClick={() => navigate('/sales/orders')} className="group bg-white rounded-2xl border-2 border-dashed border-purple-200 hover:border-purple-400 p-6 text-left transition-all hover:shadow-md">
+              <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center mb-3 group-hover:bg-purple-200 transition-colors">
+                <ShoppingCart size={20} className="text-purple-600" />
+              </div>
+              <div className="font-semibold text-slate-800 text-sm">Create your first Sales Order</div>
+              <div className="text-xs text-slate-400 mt-1">Process orders and track fulfillment</div>
+              <div className="flex items-center gap-1 text-xs text-purple-600 font-medium mt-3">
+                <PlusCircle size={12} /> Get started
+              </div>
+            </button>
+          )}
+        </div>
+
+        {/* Quick links */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-5">
+          <h3 className="font-semibold text-slate-800 text-sm mb-4">Quick Actions</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {[
+              { label: 'Invite Team Member', icon: <Users size={15} />, path: '/users-roles', color: 'text-blue-600 bg-blue-50' },
+              { label: 'Create Invoice', icon: <FileText size={15} />, path: '/finance/invoices', color: 'text-emerald-600 bg-emerald-50' },
+              { label: 'Manage Inventory', icon: <Layers size={15} />, path: '/inventory', color: 'text-amber-600 bg-amber-50' },
+              { label: 'View Analytics', icon: <BarChart2 size={15} />, path: '/analytics', color: 'text-purple-600 bg-purple-50' },
+            ].map(q => (
+              <button key={q.path} onClick={() => navigate(q.path)}
+                className="flex items-center gap-2 px-3 py-2.5 rounded-xl border border-slate-100 hover:border-slate-200 hover:bg-slate-50 text-sm font-medium text-slate-700 transition-colors text-left">
+                <span className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${q.color}`}>{q.icon}</span>
+                {q.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <AIInsightCard
+          insight="Your workspace is ready! Start by adding leads, customers, and products. Once you have data, this dashboard will show live KPIs, charts, and AI-powered insights tailored to your business."
+          onAskAI={() => navigate('/ai-assistant')}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 space-y-6">

@@ -1,10 +1,10 @@
-import { Link, useLocation } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { useState } from 'react';
 import {
   LayoutDashboard, Users, Target, ShoppingCart, FileText, Package,
   Warehouse, ShoppingBag, Truck, CreditCard, Receipt, TrendingUp,
   Share2, BarChart3, FolderOpen, Bot, Shield, Settings, ChevronDown,
-  ChevronRight, Zap, UserCheck, X, Menu,
+  ChevronRight, Zap, UserCheck, X, Menu, LogOut,
 } from 'lucide-react';
 import { useApp, ROLE_MODULES } from '../../context/AppContext';
 import { demoUsers } from '../../data/mockData';
@@ -90,7 +90,8 @@ const NAV_GROUPS: NavGroup[] = [
 
 export default function Sidebar({ open, onClose }: { open?: boolean; onClose?: () => void }) {
   const location = useLocation();
-  const { currentUser, setCurrentUser, hasModule, availableUsers, company } = useApp();
+  const navigate = useNavigate();
+  const { currentUser, setCurrentUser, hasModule, availableUsers, company, logout } = useApp();
   const [roleOpen, setRoleOpen] = useState(false);
 
   const isActive = (path: string) =>
@@ -217,6 +218,19 @@ export default function Sidebar({ open, onClose }: { open?: boolean; onClose?: (
               </div>
             </div>
           )}
+
+          {/* Logout Button */}
+          <button
+            onClick={() => {
+              logout();
+              navigate('/login');
+            }}
+            className="w-full mt-2.5 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-rose-300 hover:text-white bg-rose-950/30 hover:bg-rose-900/50 border border-rose-800/40 transition-all cursor-pointer shadow-xs"
+            title="Sign out of enterprise workspace"
+          >
+            <LogOut size={13} className="text-rose-400" />
+            <span>Sign Out / Log Out</span>
+          </button>
         </div>
       </aside>
     </>

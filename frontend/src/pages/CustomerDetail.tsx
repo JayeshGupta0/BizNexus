@@ -5,7 +5,7 @@ import { useApp } from '../context/AppContext';
 import KPICard from '../components/ui/KPICard';
 import StatusBadge from '../components/ui/StatusBadge';
 import AIInsightCard from '../components/ui/AIInsightCard';
-import { customers, salesOrders, invoices, formatCurrency, getProductById } from '../data/mockData';
+import { formatCurrency, customers as demoCustomers } from '../data/mockData';
 
 const TABS = ['Overview', 'Orders', 'Invoices', 'Activities', 'Notes'] as const;
 type Tab = typeof TABS[number];
@@ -23,12 +23,12 @@ const AI_INSIGHTS: Record<string, string> = {
 export default function CustomerDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { hasModule, hasPermission } = useApp();
+  const { hasModule, customers, salesOrders, invoices, authMode } = useApp();
   const [activeTab, setActiveTab] = useState<Tab>('Overview');
 
   if (!hasModule('customers')) return <div className="p-6 text-center text-slate-500">Access denied</div>;
 
-  const customer = customers.find(c => c.id === id);
+  const customer = customers.find(c => c.id === id) || (authMode === 'demo' ? demoCustomers.find(c => c.id === id) : undefined);
   if (!customer) return (
     <div className="p-6 text-center">
       <p className="text-slate-500">Customer not found.</p>

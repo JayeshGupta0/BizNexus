@@ -3,7 +3,7 @@ import { Upload, Search, FileText, Download, Trash2, Sparkles, CheckCircle, Load
 import { useApp } from '../context/AppContext';
 import StatusBadge from '../components/ui/StatusBadge';
 import AccessDenied from './AccessDenied';
-import { documents } from '../data/mockData';
+import { type Document } from '../data/mockData';
 
 type DocCategory = 'All' | 'Invoice' | 'Quotation' | 'Purchase Order' | 'Contract' | 'Report' | 'Business Document';
 
@@ -23,7 +23,7 @@ const STAGE_LABELS: Record<string, string> = {
 };
 
 export default function Documents() {
-  const { hasModule, hasPermission } = useApp();
+  const { hasModule, hasPermission, documents, addDocument } = useApp();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<DocCategory>('All');
   const [processingStage, setProcessingStage] = useState<ProcessingStage>(null);
@@ -37,18 +37,30 @@ export default function Documents() {
     return matchSearch && matchCat;
   });
 
-  const simulateUpload = async () => {
+  const simulateUpload = async (docName: string) => {
     const stages: ProcessingStage[] = ['uploading', 'extracting', 'chunking', 'embedding', 'indexing', 'done'];
     for (const stage of stages) {
       setProcessingStage(stage);
-      await new Promise(r => setTimeout(r, stage === 'done' ? 1500 : 800));
+      await new Promise(r => setTimeout(r, stage === 'done' ? 1200 : 600));
     }
-    setTimeout(() => setProcessingStage(null), 2000);
+    const newDoc: Document = {
+      id: `doc-${Date.now()}`,
+      name: docName,
+      category: 'Business Document',
+      size: '2.1 MB',
+      uploadedDate: new Date().toISOString().split('T')[0],
+      uploadedBy: 'Administrator',
+      status: 'Indexed',
+      chunksCount: 16,
+    };
+    addDocument(newDoc);
+    setTimeout(() => setProcessingStage(null), 1500);
   };
 
   const handleUpload = () => {
-    setNewDocName('New Business Report.pdf');
-    simulateUpload();
+    const name = `Enterprise_Doc_${Date.now().toString().slice(-4)}.pdf`;
+    setNewDocName(name);
+    simulateUpload(name);
   };
 
   const categories: DocCategory[] = ['All', 'Invoice', 'Quotation', 'Purchase Order', 'Contract', 'Report', 'Business Document'];
@@ -118,8 +130,17 @@ export default function Documents() {
         </select>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3">
-        {filtered.map(doc => (
+      {filtered.length === 0 ? (
+        <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
+          <FileText size={36} className="mx-auto mb-2 text-slate-300" />
+          <h3 className="font-semibold text-slate-700 text-sm">No Documents Found</h3>
+          <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+            {documents.length === 0 ? 'No enterprise documents uploaded yet. Click "Upload Document" above to index contracts, SOPs, or specifications.' : 'No documents match your filter criteria.'}
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3">
+          {filtered.map(doc => (
           <div key={doc.id} className="bg-white rounded-xl border border-slate-200 p-4 hover:border-blue-200 hover:shadow-sm transition-all">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-xl flex-shrink-0">
@@ -151,6 +172,7 @@ export default function Documents() {
           </div>
         ))}
       </div>
+      )}
 
       {/* RAG / Document Intelligence Visual Architecture Pipeline */}
       <div className="bg-white rounded-xl border border-purple-200 p-5 shadow-sm">

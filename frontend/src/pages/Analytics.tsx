@@ -11,16 +11,20 @@ import {
   conversionFunnel, campaigns, products, formatCurrency,
 } from '../data/mockData';
 
+import { BarChart2 } from 'lucide-react';
+
 const PERIODS = ['Today', '7 Days', '30 Days', '3 Months', '6 Months', '1 Year', 'Custom'];
 const SECTIONS = ['Sales', 'CRM', 'Marketing', 'Inventory', 'Finance'];
 const PIE_COLORS = ['#2563eb', '#7c3aed', '#16a34a', '#f59e0b', '#ef4444'];
 
 export default function Analytics() {
-  const { hasModule } = useApp();
+  const { hasModule, authMode, salesOrders } = useApp();
   const [period, setPeriod] = useState('6 Months');
   const [section, setSection] = useState('Sales');
 
   if (!hasModule('analytics')) return <AccessDenied />;
+
+  const isRealClean = authMode === 'real' && salesOrders.length === 0;
 
   const customTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
@@ -61,6 +65,18 @@ export default function Analytics() {
         ))}
       </div>
 
+      {isRealClean ? (
+        <div className="bg-white rounded-xl border border-slate-200 p-12 text-center my-6">
+          <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-3">
+            <BarChart2 size={24} />
+          </div>
+          <h3 className="font-semibold text-slate-800 text-base">Analytics Workspace Active</h3>
+          <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
+            Your enterprise analytics engine is clean and connected to SQLite. Because this workspace is freshly registered, business trends and graphs will appear dynamically as you process orders, register leads, and record financial transactions.
+          </p>
+        </div>
+      ) : (
+        <>
       {/* ── Sales Analytics ────────────────────────────────────────────── */}
       {section === 'Sales' && (
         <>
@@ -257,6 +273,8 @@ export default function Analytics() {
             </ResponsiveContainer>
           </div>
         </>
+      )}
+      </>
       )}
     </div>
   );

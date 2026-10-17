@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { flushSync } from 'react-dom';
 import { useNavigate, Link } from 'react-router';
 import {
   Building2,
@@ -9,11 +8,9 @@ import {
   ArrowRight,
   ArrowLeft,
   Lock,
-  Upload,
   Globe,
   Mail,
   Phone,
-  FileCheck,
   Check,
   Sparkles,
   Layers3,
@@ -22,8 +19,12 @@ import {
   Cpu,
   BadgeAlert,
   HelpCircle,
+  Eye,
+  EyeOff,
+  Loader2,
 } from 'lucide-react';
 import { useApp, type CompanyProfile, type Role } from '../context/AppContext';
+import { apiCheckEmail } from '../services/api';
 
 interface RoleOption {
   role: Role;
@@ -120,38 +121,34 @@ export default function Register() {
   const navigate = useNavigate();
   const { registerCompany } = useApp();
 
-  const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
+  const [currentStep, setCurrentStep] = useState<1 | 2>(1);
   const [submitting, setSubmitting] = useState(false);
-  const [uploadMockStatus, setUploadMockStatus] = useState<string>('GST_Certificate_2024.pdf');
+  const [registerError, setRegisterError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [checkingEmail, setCheckingEmail] = useState(false);
 
-  // Form State
+  // Form State (Default: Food & Beverages / Nestlé FMCG)
   const [formData, setFormData] = useState({
     // Step 1: Owner Details
-    ownerName: 'Vikramaditya Singhania',
-    ownerEmail: 'vikramaditya@singhaniagroup.in',
+    ownerName: 'Suresh Narayanan',
+    ownerEmail: 'suresh.narayanan@nestle.in',
     ownerPhone: '+91 98201 44890',
     ownerDesignation: 'Chairman & Managing Director',
     password: 'Password@2026',
     confirmPassword: 'Password@2026',
     // Step 2: Business Details
-    companyName: 'Singhania Industrial Holdings Pvt. Ltd.',
-    tradingName: 'Singhania Logistics & Distribution',
-    industry: 'Distribution & Supply Chain Logistics',
+    companyName: 'Nestlé India Consumer Products Ltd.',
+    tradingName: 'Nestlé Nutrition & Foods',
+    industry: 'Food & Beverages',  // Default: Food & Beverages
     companySize: '51-200 employees',
-    website: 'https://singhaniagroup.in',
-    registeredAddress: 'Apex Commercial Plaza, Senapati Bapat Marg, Lower Parel',
-    city: 'Mumbai',
-    state: 'Maharashtra',
+    website: 'https://www.nestle.in',
+    registeredAddress: 'Nestlé House, Jacaranda Marg, DLF City Phase II',
+    city: 'Gurugram',
+    state: 'Haryana',
     country: 'India',
-    pincode: '400013',
-    // Step 3: Authenticity & Proofs
-    gstin: 'GSTIN27AABCS9876K1ZX',
-    panNumber: 'AABCS9876K',
-    cinNumber: 'U51909MH2021PTC368921',
-    incorporationDate: '2021-08-14',
-    complianceCert: 'ISO 9001:2015 & GST Registered Enterprise',
-    complianceCheck: true,
-    // Step 4: Roles & Modules
+    pincode: '122002',
+    // Roles & Modules
     enabledRoles: [
       'Business Owner',
       'Sales Manager',
@@ -185,30 +182,72 @@ export default function Register() {
   const validateStep = (step: number) => {
     const errs: Record<string, string> = {};
     if (step === 1) {
-      if (!formData.ownerName.trim()) errs.ownerName = 'Owner full name is required';
-      if (!formData.ownerEmail.trim()) errs.ownerEmail = 'Business email is required';
-      if (!formData.ownerPhone.trim()) errs.ownerPhone = 'Phone number is required';
-      if (!formData.password || formData.password.length < 6) errs.password = 'Password must be at least 6 characters';
-      if (formData.password !== formData.confirmPassword) errs.confirmPassword = 'Passwords do not match';
+      if (!formData.ownerName.trim()) {
+        errs.ownerName = 'Owner full legal name is required';
+      }
+
+      // Email format validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!formData.ownerEmail.trim()) {
+        errs.ownerEmail = 'Business email is required';
+      } else if (!emailRegex.test(formData.ownerEmail.trim())) {
+        errs.ownerEmail = 'Invalid email address format (e.g. name@company.com)';
+      }
+
+      // Phone format validation (must be at least 10 digits)
+      const cleanPhone = formData.ownerPhone.replace(/[\s\-\(\)]/g, '');
+      if (!cleanPhone) {
+        errs.ownerPhone = 'Phone number is required';
+      } else if (!/^\+?\d{10,14}$/.test(cleanPhone)) {
+        errs.ownerPhone = 'Please enter a valid phone number (at least 10 digits)';
+      }
+
+      // Password validation
+      if (!formData.password) {
+        errs.password = 'Master password is required';
+      } else if (formData.password.length < 6) {
+        errs.password = 'Password must be at least 6 characters';
+      }
+
+      // Password match validation
+      if (!formData.confirmPassword) {
+        errs.confirmPassword = 'Please confirm your password';
+      } else if (formData.password !== formData.confirmPassword) {
+        errs.confirmPassword = 'Passwords do not match';
+      }
     } else if (step === 2) {
       if (!formData.companyName.trim()) errs.companyName = 'Company name is required';
       if (!formData.industry) errs.industry = 'Please select an industry';
       if (!formData.registeredAddress.trim()) errs.registeredAddress = 'Address is required';
       if (!formData.city.trim()) errs.city = 'City is required';
       if (!formData.pincode.trim()) errs.pincode = 'Pincode is required';
-    } else if (step === 3) {
-      if (!formData.gstin.trim() || formData.gstin.length < 10) errs.gstin = 'Valid GSTIN number is required';
-      if (!formData.panNumber.trim() || formData.panNumber.length < 10) errs.panNumber = 'Valid corporate PAN is required';
-      if (!formData.complianceCheck) errs.complianceCheck = 'Please verify organization authenticity';
     }
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
 
-  const handleNext = () => {
-    if (validateStep(currentStep)) {
-      setCurrentStep((prev) => Math.min(prev + 1, 3) as any);
+  const handleNext = async () => {
+    if (!validateStep(currentStep)) return;
+
+    if (currentStep === 1) {
+      try {
+        setCheckingEmail(true);
+        const check = await apiCheckEmail(formData.ownerEmail.trim());
+        if (check.exists) {
+          setErrors((prev) => ({
+            ...prev,
+            ownerEmail: 'This email is already registered in the system. Please sign in or use a different email.',
+          }));
+          return;
+        }
+      } catch (err) {
+        console.warn('Email uniqueness check failed:', err);
+      } finally {
+        setCheckingEmail(false);
+      }
     }
+
+    setCurrentStep((prev) => Math.min(prev + 1, 2) as any);
   };
 
   const handleBack = () => {
@@ -236,15 +275,11 @@ export default function Register() {
     });
   };
 
-  // Standalone registration function — NOT tied to form onSubmit to prevent
-  // the auto-submit bug where clicking 'Continue to Step 4' re-renders the
-  // button as type='submit' in the same DOM slot, causing a spurious submit.
+  // Standalone registration function — calls SQLite backend
   const doRegister = async () => {
-    if (!validateStep(3)) return;
-
+    if (!validateStep(2)) return;
     setSubmitting(true);
-    // Simulate enterprise tenant provisioning delay
-    await new Promise((r) => setTimeout(r, 1200));
+    setRegisterError('');
 
     const tenantSlug = formData.companyName
       .toLowerCase()
@@ -263,11 +298,11 @@ export default function Register() {
       state: formData.state,
       country: formData.country,
       pincode: formData.pincode,
-      gstin: formData.gstin.toUpperCase(),
-      panNumber: formData.panNumber.toUpperCase(),
-      cinNumber: formData.cinNumber,
-      incorporationDate: formData.incorporationDate,
-      complianceCert: formData.complianceCert,
+      gstin: '',
+      panNumber: '',
+      cinNumber: '',
+      incorporationDate: '',
+      complianceCert: '',
       isVerified: true,
       ownerName: formData.ownerName,
       ownerEmail: formData.ownerEmail,
@@ -279,14 +314,14 @@ export default function Register() {
       createdAt: new Date().toISOString(),
     };
 
-    // flushSync forces React to commit ALL state updates inside registerCompany
-    // (setCompany, setCurrentUser, setIsLoggedIn) synchronously before navigate()
-    // fires — so AppLayout sees isLoggedIn=true on the very first render.
-    flushSync(() => {
-      registerCompany(profile);
-    });
-    setSubmitting(false);
-    navigate('/dashboard', { replace: true });
+    try {
+      await registerCompany(profile, formData.password);
+      navigate('/dashboard', { replace: true });
+    } catch (err: any) {
+      setRegisterError(err.message || 'Registration failed. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -329,7 +364,6 @@ export default function Register() {
             {[
               { num: 1, title: 'Owner Identity', desc: 'Designate company executive & credentials' },
               { num: 2, title: 'Commercial Entity', desc: 'Operating address & industry profile' },
-              { num: 3, title: 'Authenticity & Tax', desc: 'GSTIN, PAN & registration proofs' },
             ].map((step) => {
               const isActive = currentStep === step.num;
               const isPast = currentStep > step.num;
@@ -367,8 +401,7 @@ export default function Register() {
 
         {/* Bottom trust footer */}
         <div className="relative z-10 pt-6 border-t border-white/10 flex items-center justify-between text-xs text-stone-400">
-          <span>Enterprise 256-bit AES</span>
-          <span className="font-mono text-amber-400/80">SOC-2 Type II Certified</span>
+          <span>© 2026 BizNexus Platform</span>
         </div>
       </div>
 
@@ -383,7 +416,7 @@ export default function Register() {
             <span className="font-bold font-display text-base text-[#1F130B]">BizNexus</span>
           </Link>
           <div className="text-xs font-semibold text-[#5C3A21]">
-            Step {currentStep} of 3
+            Step {currentStep} of 2
           </div>
         </div>
 
@@ -406,7 +439,7 @@ export default function Register() {
 
           {/* Stepper Pills on Mobile/Tablet */}
           <div className="flex items-center justify-between gap-2 mb-8 lg:hidden">
-            {[1, 2, 3].map((step) => (
+            {[1, 2].map((step) => (
               <div
                 key={step}
                 className={`h-1.5 flex-1 rounded-full transition-all ${
@@ -506,14 +539,24 @@ export default function Register() {
                     </label>
                     <div className="relative">
                       <input
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         value={formData.password}
-                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        onChange={(e) => {
+                          setFormData({ ...formData, password: e.target.value });
+                          if (errors.password) setErrors(prev => ({ ...prev, password: '' }));
+                        }}
                         className="w-full px-4 py-2.5 rounded-xl border border-[#5C3A21]/20 bg-white text-sm focus:outline-none focus:border-[#EA580C] focus:ring-2 focus:ring-[#EA580C]/20 transition-all font-medium pr-10"
                       />
-                      <Lock size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400" />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((p) => !p)}
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 transition-colors cursor-pointer"
+                        title={showPassword ? 'Hide password' : 'View password'}
+                      >
+                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
                     </div>
-                    {errors.password && <p className="text-xs text-red-600 mt-1">{errors.password}</p>}
+                    {errors.password && <p className="text-xs text-red-600 mt-1 font-medium">{errors.password}</p>}
                   </div>
 
                   <div>
@@ -522,14 +565,24 @@ export default function Register() {
                     </label>
                     <div className="relative">
                       <input
-                        type="password"
+                        type={showConfirmPassword ? 'text' : 'password'}
                         value={formData.confirmPassword}
-                        onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                        onChange={(e) => {
+                          setFormData({ ...formData, confirmPassword: e.target.value });
+                          if (errors.confirmPassword) setErrors(prev => ({ ...prev, confirmPassword: '' }));
+                        }}
                         className="w-full px-4 py-2.5 rounded-xl border border-[#5C3A21]/20 bg-white text-sm focus:outline-none focus:border-[#EA580C] focus:ring-2 focus:ring-[#EA580C]/20 transition-all font-medium pr-10"
                       />
-                      <Lock size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400" />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword((p) => !p)}
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 transition-colors cursor-pointer"
+                        title={showConfirmPassword ? 'Hide password' : 'View password'}
+                      >
+                        {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
                     </div>
-                    {errors.confirmPassword && <p className="text-xs text-red-600 mt-1">{errors.confirmPassword}</p>}
+                    {errors.confirmPassword && <p className="text-xs text-red-600 mt-1 font-medium">{errors.confirmPassword}</p>}
                   </div>
                 </div>
 
@@ -541,8 +594,8 @@ export default function Register() {
                     onClick={() =>
                       setFormData((prev) => ({
                         ...prev,
-                        ownerName: 'Vikramaditya Singhania',
-                        ownerEmail: 'vikramaditya@singhaniagroup.in',
+                        ownerName: 'Suresh Narayanan',
+                        ownerEmail: 'suresh.narayanan@nestle.in',
                         ownerPhone: '+91 98201 44890',
                       }))
                     }
@@ -608,12 +661,25 @@ export default function Register() {
                       onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
                       className="w-full px-4 py-2.5 rounded-xl border border-[#5C3A21]/20 bg-white text-sm focus:outline-none focus:border-[#EA580C] focus:ring-2 focus:ring-[#EA580C]/20 transition-all font-medium"
                     >
+                      <option value="Food & Beverages">Food & Beverages</option>
                       <option value="Distribution & Supply Chain Logistics">Distribution & Logistics</option>
                       <option value="Manufacturing & Heavy Industrial">Manufacturing & Industrial</option>
                       <option value="Consumer Goods & FMCG Retail">FMCG & Consumer Goods</option>
                       <option value="Technology & Enterprise SaaS">Technology & IT Services</option>
                       <option value="Pharmaceuticals & Healthcare Supply">Pharma & Healthcare</option>
                       <option value="Construction & Building Materials">Construction Materials</option>
+                      <option value="Automotive & Components">Automotive & Components</option>
+                      <option value="Agriculture & Agro-Processing">Agriculture & Agro-Processing</option>
+                      <option value="Textiles & Apparel">Textiles & Apparel</option>
+                      <option value="Chemicals & Specialty Materials">Chemicals & Materials</option>
+                      <option value="E-Commerce & Retail">E-Commerce & Retail</option>
+                      <option value="Education & EdTech">Education & EdTech</option>
+                      <option value="Real Estate & Infrastructure">Real Estate & Infrastructure</option>
+                      <option value="Logistics & Freight">Logistics & Freight</option>
+                      <option value="Healthcare & Medical Devices">Healthcare & Medical Devices</option>
+                      <option value="Media & Entertainment">Media & Entertainment</option>
+                      <option value="Financial Services & Fintech">Financial Services & Fintech</option>
+                      <option value="Other">Other</option>
                     </select>
                   </div>
 
@@ -702,131 +768,9 @@ export default function Register() {
                     />
                   </div>
                 </div>
-              </div>
-            )}
 
-            {/* ════ STEP 3: AUTHENTICITY & LEGAL PROOF ════ */}
-            {currentStep === 3 && (
-              <div className="space-y-6 animate-fade-in">
-                <div>
-                  <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#D97706] mb-1">
-                    <ShieldCheck size={14} /> Step 3: Authenticity & Statutory Credentials
-                  </div>
-                  <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-[#1F130B]">
-                    Corporate Legitimacy Verification
-                  </h2>
-                  <p className="text-[#5C3A21]/80 text-sm mt-1">
-                    BizNexus validates commercial tax registrations and corporate identification to establish audit traceability.
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-[#5C3A21] mb-1.5">
-                      GSTIN Identification *
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        value={formData.gstin}
-                        onChange={(e) => setFormData({ ...formData, gstin: e.target.value.toUpperCase() })}
-                        placeholder="GSTIN27AABCS9876K1ZX"
-                        className="w-full px-4 py-2.5 rounded-xl border border-[#5C3A21]/20 bg-white text-sm font-mono tracking-wider focus:outline-none focus:border-[#EA580C] focus:ring-2 focus:ring-[#EA580C]/20 transition-all font-medium uppercase"
-                      />
-                      <FileCheck size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-emerald-600" />
-                    </div>
-                    {errors.gstin && <p className="text-xs text-red-600 mt-1">{errors.gstin}</p>}
-                    <span className="text-[11px] text-stone-500 mt-1 block">Valid 15-character Indian Goods & Services Tax ID</span>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-[#5C3A21] mb-1.5">
-                      Corporate PAN Number *
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.panNumber}
-                      onChange={(e) => setFormData({ ...formData, panNumber: e.target.value.toUpperCase() })}
-                      placeholder="AABCS9876K"
-                      className="w-full px-4 py-2.5 rounded-xl border border-[#5C3A21]/20 bg-white text-sm font-mono tracking-wider focus:outline-none focus:border-[#EA580C] focus:ring-2 focus:ring-[#EA580C]/20 transition-all font-medium uppercase"
-                    />
-                    {errors.panNumber && <p className="text-xs text-red-600 mt-1">{errors.panNumber}</p>}
-                    <span className="text-[11px] text-stone-500 mt-1 block">10-character Permanent Account Number</span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-[#5C3A21] mb-1.5">
-                      Corporate Identity (CIN / RoC)
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.cinNumber}
-                      onChange={(e) => setFormData({ ...formData, cinNumber: e.target.value.toUpperCase() })}
-                      placeholder="U51909MH2021PTC368921"
-                      className="w-full px-4 py-2.5 rounded-xl border border-[#5C3A21]/20 bg-white text-sm font-mono focus:outline-none focus:border-[#EA580C] font-medium"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-[#5C3A21] mb-1.5">
-                      Incorporation Date
-                    </label>
-                    <input
-                      type="date"
-                      value={formData.incorporationDate}
-                      onChange={(e) => setFormData({ ...formData, incorporationDate: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-[#5C3A21]/20 bg-white text-sm focus:outline-none focus:border-[#EA580C] font-medium"
-                    />
-                  </div>
-                </div>
-
-                {/* Upload Verification Document Box */}
-                <div>
-                  <label className="block text-xs font-bold text-[#5C3A21] mb-1.5">
-                    Statutory Registration Document (Certificate / License)
-                  </label>
-                  <div className="border-2 border-dashed border-[#5C3A21]/25 hover:border-[#EA580C] rounded-2xl p-5 bg-white text-center transition-colors">
-                    <div className="w-10 h-10 rounded-xl bg-amber-50 text-[#D97706] flex items-center justify-center mx-auto mb-2">
-                      <Upload size={18} />
-                    </div>
-                    <div className="text-xs font-bold text-[#1F130B]">
-                      {uploadMockStatus}
-                    </div>
-                    <div className="text-[11px] text-stone-500 mt-0.5">
-                      Attached verified digital certificate (PDF or PNG up to 10MB)
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setUploadMockStatus('Corporate_Incorp_Certificate_Signed.pdf')}
-                      className="mt-2 text-[11px] font-bold text-[#EA580C] hover:underline"
-                    >
-                      Replace Sample Certificate
-                    </button>
-                  </div>
-                </div>
-
-                {/* Authenticity Declaration Checkbox */}
-                <div className="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200">
-                  <label className="flex items-start gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={formData.complianceCheck}
-                      onChange={(e) => setFormData({ ...formData, complianceCheck: e.target.checked })}
-                      className="w-4 h-4 rounded text-[#EA580C] focus:ring-[#EA580C] mt-0.5 accent-[#EA580C]"
-                    />
-                    <div className="text-xs text-emerald-950">
-                      <span className="font-bold">Affirmation of Authenticity & Enterprise Authority:</span>
-                      <p className="text-emerald-900/80 mt-0.5">
-                        I certify that I am the authorized representative of {formData.companyName || 'this entity'}. All tax and corporate registration details provided are authentic and lawful under applicable commercial legislation.
-                      </p>
-                    </div>
-                  </label>
-                  {errors.complianceCheck && <p className="text-xs text-red-600 mt-2">{errors.complianceCheck}</p>}
-                </div>
                 {/* Final Confirmation & Launch Banner */}
-                <div className="p-4 rounded-2xl bg-gradient-to-r from-[#78350F]/10 via-[#D97706]/10 to-[#EA580C]/10 border border-[#D97706]/30">
+                <div className="mt-4 p-4 rounded-2xl bg-gradient-to-r from-[#78350F]/10 via-[#D97706]/10 to-[#EA580C]/10 border border-[#D97706]/30">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#D97706] to-[#EA580C] text-white flex items-center justify-center shrink-0">
                       <Sparkles size={18} />
@@ -836,7 +780,7 @@ export default function Register() {
                         Ready to launch {formData.companyName || 'your business'}
                       </div>
                       <div className="text-[11px] text-[#5C3A21]/80 mt-0.5">
-                        Your workspace will be provisioned with tenant ID <span className="font-mono font-bold text-amber-800">tenant-{formData.companyName.toLowerCase().slice(0, 10).replace(/[^a-z0-9]/g, '')}</span>. Pre-configured staff accounts and modules are enabled so you can switch roles immediately.
+                        Your workspace will be provisioned with tenant ID <span className="font-mono font-bold text-amber-800">tenant-{formData.companyName.toLowerCase().slice(0, 10).replace(/[^a-z0-9]/g, '') || 'enterprise'}</span>. Pre-configured staff accounts and modules are enabled so you can switch roles immediately.
                       </div>
                     </div>
                   </div>
@@ -858,34 +802,51 @@ export default function Register() {
                 <div />
               )}
 
-              {currentStep < 3 ? (
+              {currentStep < 2 ? (
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#D97706] via-[#EA580C] to-[#C2410C] text-white font-bold text-xs shadow-md shadow-orange-600/20 hover:shadow-lg hover:shadow-orange-600/30 transition-all flex items-center gap-2 cursor-pointer"
+                  disabled={checkingEmail}
+                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#D97706] via-[#EA580C] to-[#C2410C] text-white font-bold text-xs shadow-md shadow-orange-600/20 hover:shadow-lg hover:shadow-orange-600/30 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-60"
                 >
-                  Continue to Step {currentStep + 1}
-                  <ArrowRight size={14} />
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={doRegister}
-                  disabled={submitting}
-                  className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#D97706] via-[#EA580C] to-[#C2410C] text-white font-bold text-sm shadow-xl shadow-orange-600/30 hover:shadow-2xl hover:shadow-orange-600/40 transition-all flex items-center gap-2.5 cursor-pointer disabled:opacity-50"
-                >
-                  {submitting ? (
+                  {checkingEmail ? (
                     <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Provisioning Workspace & Roles...
+                      <Loader2 size={14} className="animate-spin" />
+                      Checking Email Availability...
                     </>
                   ) : (
                     <>
-                      Complete Registration & Launch Portal
-                      <ArrowRight size={16} />
+                      Continue to Step {currentStep + 1}
+                      <ArrowRight size={14} />
                     </>
                   )}
                 </button>
+              ) : (
+                <div className="flex flex-col items-end gap-2">
+                  {registerError && (
+                    <div className="text-xs text-red-600 bg-red-50 border border-red-200 px-3 py-2 rounded-lg">
+                      ⚠️ {registerError}
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    onClick={doRegister}
+                    disabled={submitting}
+                    className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#D97706] via-[#EA580C] to-[#C2410C] text-white font-bold text-sm shadow-xl shadow-orange-600/30 hover:shadow-2xl hover:shadow-orange-600/40 transition-all flex items-center gap-2.5 cursor-pointer disabled:opacity-50"
+                  >
+                    {submitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Provisioning Workspace & Saving to DB...
+                      </>
+                    ) : (
+                      <>
+                        Complete Registration & Launch Portal
+                        <ArrowRight size={16} />
+                      </>
+                    )}
+                  </button>
+                </div>
               )}
             </div>
           </form>

@@ -23,163 +23,176 @@ MOCK_REVENUE_TREND = [
 MOCK_LEADS = [
     {
         "id": "lead-001",
-        "name": "Nova Distributor Partnership",
-        "company": "Nova Distributor Pvt Ltd",
-        "lead_type": "Distributor",
+        "name": "Zepto Quick Grocery Hubs Tender",
+        "company": "Zepto Commerce Pvt Ltd",
+        "lead_type": "Retailer",
         "stage": "NEGOTIATION",
-        "potential_value": 1250000.0,
-        "potential_value_formatted": "₹12.5L",
-        "source": "LinkedIn",
+        "potential_value": 1480000.0,
+        "potential_value_formatted": "₹14.8L",
+        "source": "Website",
         "priority": "High",
         "assigned_to": "Rahul Sharma",
-        "contact_person": "Vikrant Verma",
-        "email": "vikrant@novadist.in",
-        "phone": "+91 98201 44521",
-        "location": "Ahmedabad, Gujarat",
-        "industry": "Consumer Electronics",
+        "contact_person": "Vivek Kapoor",
+        "email": "vivek.kapoor@zepto.in",
+        "phone": "+91 98001 23456",
+        "location": "Jaipur, Rajasthan",
+        "industry": "Quick Commerce & Instant Grocery",
         "probability": 75,
-        "expected_close": "15 Sep 2026",
-        "last_activity": "Pricing revised after negotiation call",
+        "expected_close": "30 Sep 2026",
+        "last_activity": "Revised tier rebate on Maggi & Nescafé delivered",
         "next_follow_up": "Final commercial sign-off call",
-        "ai_insight": "High-value distributor opportunity. Engagement is accelerating with multiple pricing reviews. 75% win probability."
+        "ai_insight": "High-velocity quick commerce distributor. Weekly reorder frequency projected at 4x average modern trade accounts. 75% win probability."
     },
     {
         "id": "lead-002",
-        "name": "Acme Retail Store Expansion",
-        "company": "Acme Retail Chain",
-        "lead_type": "Retailer",
-        "stage": "PROPOSAL",
-        "potential_value": 480000.0,
-        "potential_value_formatted": "₹4.8L",
-        "source": "Website",
-        "priority": "Medium",
+        "name": "Taj Hotels F&B Procurement",
+        "company": "The Indian Hotels Company Ltd (Taj)",
+        "lead_type": "Enterprise",
+        "stage": "QUALIFIED",
+        "potential_value": 2400000.0,
+        "potential_value_formatted": "₹24.0L",
+        "source": "Sales Team",
+        "priority": "High",
         "assigned_to": "Rahul Sharma",
-        "contact_person": "Pooja Hegde",
-        "email": "pooja@acmeretail.com",
-        "phone": "+91 98112 33412",
+        "contact_person": "Mohan Lal",
+        "email": "mohan.lal@tajhotels.com",
+        "phone": "+91 97002 34567",
         "location": "Mumbai, Maharashtra",
-        "industry": "Retail & Supermarkets",
-        "probability": 65,
-        "expected_close": "22 Sep 2026",
-        "last_activity": "Quotation BNX-Q-092 sent",
-        "next_follow_up": "Follow-up on quotation feedback",
-        "ai_insight": "Lead converted from direct website inbound. Good credit profile and high repeat potential."
+        "industry": "Luxury Hospitality & Catering",
+        "probability": 60,
+        "expected_close": "15 Oct 2026",
+        "last_activity": "Quotation QT-1084 with HoReCa bulk discounts delivered",
+        "next_follow_up": "Follow-up on executive chef tasting feedback",
+        "ai_insight": "Institutional HoReCa annual contract for Nescafé coffee beans, Nestea, and culinary Milkmaid."
     },
     {
         "id": "lead-003",
-        "name": "ABC Wholesale Network",
-        "company": "ABC Wholesale Traders",
+        "name": "Haldiram Festive Sweet Manufacturing",
+        "company": "Haldiram Snacks & Sweets Chain",
         "lead_type": "Wholesaler",
-        "stage": "QUALIFIED",
-        "potential_value": 720000.0,
-        "potential_value_formatted": "₹7.2L",
-        "source": "Instagram",
+        "stage": "NEGOTIATION",
+        "potential_value": 1850000.0,
+        "potential_value_formatted": "₹18.5L",
+        "source": "LinkedIn",
         "priority": "High",
         "assigned_to": "Rahul Sharma",
-        "contact_person": "Sunil Nair",
-        "email": "sunil@abcwholesale.com",
-        "phone": "+91 97401 22891",
-        "location": "Bengaluru, Karnataka",
-        "industry": "Fast Moving Consumer Goods",
-        "probability": 50,
-        "expected_close": "30 Sep 2026",
-        "last_activity": "Product demo presentation delivered",
-        "next_follow_up": "Send sample agreement and pricing tiers",
-        "ai_insight": "Generated via Wholesale Partner Instagram ad campaign. Highly engaged with marketing collateral."
+        "contact_person": "Sanjay Aggarwal",
+        "email": "sanjay@haldirams.com",
+        "phone": "+91 96003 45678",
+        "location": "Nagpur, Maharashtra",
+        "industry": "Confectionery & QSR Retail",
+        "probability": 80,
+        "expected_close": "20 Sep 2026",
+        "last_activity": "Bulk Milkmaid condensed milk quote accepted",
+        "next_follow_up": "Dispatch schedule confirmation",
+        "ai_insight": "Festive seasonal demand for bulk Nestlé Milkmaid trays. Factory quality and cold-chain compliance verified."
     }
 ]
 
 MOCK_CUSTOMERS = [
     {
         "id": "cust-001",
-        "name": "Acme Corporation",
+        "name": "Reliance Retail Ventures Ltd",
         "type": "Enterprise",
-        "contact_person": "Rajesh Sharma",
-        "email": "rajesh.sharma@acmecorp.in",
-        "phone": "+91 98200 11223",
+        "contact_person": "Suresh Menon",
+        "email": "suresh.menon@relianceretail.com",
+        "phone": "+91 98765 43210",
         "location": "Mumbai, Maharashtra",
-        "orders_count": 126,
-        "total_revenue": 1840000.0,
-        "total_revenue_formatted": "₹18.4L",
-        "outstanding": 120000.0,
-        "outstanding_formatted": "₹1.2L",
+        "orders_count": 142,
+        "total_revenue": 4840000.0,
+        "total_revenue_formatted": "₹48.4L",
+        "outstanding": 184000.0,
+        "outstanding_formatted": "₹1.84L",
         "status": "Active",
-        "account_owner": "Arjun Mehta",
-        "customer_since": "Jan 2024",
-        "health_score": 94,
-        "ai_insight": "Top revenue enterprise partner. Reorder frequency is 14% higher than average. Low churn risk."
+        "account_owner": "Rahul Sharma",
+        "customer_since": "Mar 2021",
+        "health_score": 96,
+        "ai_insight": "Top modern trade partner nationally. Steady weekly replenishment on Maggi 2-Minute Noodles and Nescafé Classic jars."
     },
     {
         "id": "cust-002",
-        "name": "Nova Retail",
-        "type": "Retailer",
-        "contact_person": "Priya Shah",
-        "email": "priya@novaretail.com",
-        "phone": "+91 98330 44556",
-        "location": "Pune, Maharashtra",
-        "orders_count": 84,
-        "total_revenue": 860000.0,
-        "total_revenue_formatted": "₹8.6L",
-        "outstanding": 42000.0,
-        "outstanding_formatted": "₹42K",
+        "name": "Avenue Supermarts Ltd (DMart)",
+        "type": "Enterprise",
+        "contact_person": "Anjali Desai",
+        "email": "anjali.desai@dmartindia.com",
+        "phone": "+91 99887 65432",
+        "location": "Thane, Maharashtra",
+        "orders_count": 128,
+        "total_revenue": 5620000.0,
+        "total_revenue_formatted": "₹56.2L",
+        "outstanding": 96000.0,
+        "outstanding_formatted": "₹96K",
         "status": "Active",
         "account_owner": "Rahul Sharma",
-        "customer_since": "Mar 2024",
-        "health_score": 88,
-        "ai_insight": "Solid payment history with steady weekly replenishment cycles. Recommended candidate for volume discount."
+        "customer_since": "Nov 2020",
+        "health_score": 98,
+        "ai_insight": "Highest volume grocery supermarket chain. Excellent credit rating and zero payment dispute history."
     }
 ]
 
 MOCK_PRODUCTS = [
-    {"id": "prod-001", "sku": "BNX-CRM-001", "name": "Enterprise CRM Suite", "category": "Software", "price": 48000.0, "cost": 12000.0, "stock": 84, "reorder_level": 20, "status": "In Stock", "supplier": "TechSource India"},
-    {"id": "prod-002", "sku": "BNX-ANA-002", "name": "Business Analytics Pro", "category": "Software", "price": 36000.0, "cost": 8000.0, "stock": 8, "reorder_level": 15, "status": "Low Stock", "supplier": "TechSource India"},
-    {"id": "prod-003", "sku": "BNX-INV-003", "name": "Inventory Management Module", "category": "Software", "price": 24000.0, "cost": 6000.0, "stock": 0, "reorder_level": 10, "status": "Out of Stock", "supplier": "Global Components"},
-    {"id": "prod-004", "sku": "BNX-AI-004", "name": "AI Assistant Pro", "category": "AI Modules", "price": 60000.0, "cost": 15000.0, "stock": 45, "reorder_level": 10, "status": "In Stock", "supplier": "TechSource India"},
-    {"id": "prod-005", "sku": "BNX-ERP-005", "name": "Cloud ERP Package", "category": "Enterprise ERP", "price": 84000.0, "cost": 22000.0, "stock": 29, "reorder_level": 8, "status": "In Stock", "supplier": "Prime Distribution"}
+    {"id": "prod-001", "sku": "NES-MAG-001", "name": "Maggi 2-Minute Masala Noodles (Master Carton - 96 packs)", "category": "Instant Foods", "price": 1440.0, "cost": 960.0, "stock": 1250, "reorder_level": 200, "status": "In Stock", "supplier": "Punjab Golden Wheat Agro Flour Mills"},
+    {"id": "prod-002", "sku": "NES-COF-002", "name": "Nescafé Classic Instant Coffee (Glass Jar 200g - Case of 24)", "category": "Beverages & Coffee", "price": 13200.0, "cost": 8400.0, "stock": 480, "reorder_level": 80, "status": "In Stock", "supplier": "Karnataka Planters Green Coffee Estate"},
+    {"id": "prod-003", "sku": "NES-KIT-003", "name": "KitKat 4-Finger Milk Chocolate Wafer (Box of 48 Bars)", "category": "Confectionery", "price": 1920.0, "cost": 1200.0, "stock": 850, "reorder_level": 150, "status": "In Stock", "supplier": "National Dairy Cooperatives & Milk Union"},
+    {"id": "prod-004", "sku": "NES-MLK-004", "name": "Nestlé Milkmaid Sweetened Condensed Milk (Tin 400g - Tray of 24)", "category": "Dairy & Culinary", "price": 3840.0, "cost": 2600.0, "stock": 620, "reorder_level": 100, "status": "In Stock", "supplier": "National Dairy Cooperatives & Milk Union"},
+    {"id": "prod-005", "sku": "NES-CER-005", "name": "Nestlé Cerelac Fortified Baby Cereal Wheat & Apple (Case of 18)", "category": "Nutrition & Baby Foods", "price": 5400.0, "cost": 3600.0, "stock": 310, "reorder_level": 50, "status": "In Stock", "supplier": "Punjab Golden Wheat Agro Flour Mills"},
+    {"id": "prod-006", "sku": "NES-EVR-006", "name": "Nestlé Everyday Dairy Whitener (1kg Pouch - Box of 12)", "category": "Dairy & Milk Powders", "price": 5160.0, "cost": 3500.0, "stock": 540, "reorder_level": 90, "status": "In Stock", "supplier": "National Dairy Cooperatives & Milk Union"},
+    {"id": "prod-007", "sku": "NES-TEA-007", "name": "Nestea Lemon Instant Iced Tea Mix (Pouch 1kg - Box of 10)", "category": "Beverages & Tea", "price": 3600.0, "cost": 2300.0, "stock": 420, "reorder_level": 70, "status": "In Stock", "supplier": "Karnataka Planters Green Coffee Estate"}
+]
+
+MOCK_QUOTATIONS = [
+    {"id": "QT-1085", "client_name": "Reliance Retail Ventures Ltd", "type": "Customer", "total": 661248.0, "total_formatted": "₹6.61L", "created_date": "02 Sep 2026", "expiry_date": "02 Oct 2026", "salesperson": "Rahul Sharma", "status": "Draft", "notes": "Q4 Modern Trade master agreement for Reliance Retail stores."},
+    {"id": "QT-1084", "client_name": "Avenue Supermarts Ltd (DMart)", "type": "Customer", "total": 638208.0, "total_formatted": "₹6.38L", "created_date": "28 Aug 2026", "expiry_date": "28 Sep 2026", "salesperson": "Priya Shah", "status": "Viewed", "notes": "Under commercial evaluation by DMart central FMCG purchasing team."},
+    {"id": "QT-1083", "client_name": "Haldiram Snacks & Sweets Chain", "type": "Lead", "total": 2154240.0, "total_formatted": "₹21.5L", "created_date": "25 Aug 2026", "expiry_date": "25 Sep 2026", "salesperson": "Rahul Sharma", "status": "Sent", "notes": "Bulk festive order of Nestlé Milkmaid condensed milk for sweet making."},
+    {"id": "QT-1082", "client_name": "Zepto Quick Grocery Hubs", "type": "Lead", "total": 783744.0, "total_formatted": "₹7.84L", "created_date": "10 Aug 2026", "expiry_date": "10 Sep 2026", "salesperson": "Priya Shah", "status": "Viewed", "notes": "Zepto Dark Store expansion quote for 18 regional micro-hubs."},
+    {"id": "QT-1081", "client_name": "Metro Cash & Carry Wholesale", "type": "Customer", "total": 998016.0, "total_formatted": "₹9.98L", "created_date": "18 Aug 2026", "expiry_date": "18 Sep 2026", "salesperson": "Priya Shah", "status": "Accepted", "notes": "Approved by Metro Wholesale category manager. Ready for fulfillment."},
+    {"id": "QT-1080", "client_name": "Blinkit Commerce Dark Stores", "type": "Customer", "total": 182400.0, "total_formatted": "₹1.82L", "created_date": "20 Aug 2026", "expiry_date": "20 Sep 2026", "salesperson": "Priya Shah", "status": "Accepted", "notes": "KitKat flash sale replenishment for Blinkit Gurgaon dark stores."}
 ]
 
 MOCK_ORDERS = [
-    {"id": "ORD-1048", "customer_name": "Acme Corporation", "amount": 240000.0, "amount_formatted": "₹2.4L", "date": "02 Sep 2026", "payment_status": "Paid", "fulfillment_status": "Delivered", "items_count": 5},
-    {"id": "ORD-1047", "customer_name": "Nova Retail", "amount": 180000.0, "amount_formatted": "₹1.8L", "date": "01 Sep 2026", "payment_status": "Paid", "fulfillment_status": "Delivered", "items_count": 3},
-    {"id": "ORD-1046", "customer_name": "Vertex Solutions", "amount": 320000.0, "amount_formatted": "₹3.2L", "date": "29 Aug 2026", "payment_status": "Pending", "fulfillment_status": "Processing", "items_count": 8}
+    {"id": "ORD-1048", "customer_name": "Reliance Retail Ventures Ltd", "amount": 486000.0, "amount_formatted": "₹4.86L", "date": "28 Aug 2026", "payment_status": "Paid", "fulfillment_status": "Delivered", "items_count": 215},
+    {"id": "ORD-1049", "customer_name": "Avenue Supermarts Ltd (DMart)", "amount": 509760.0, "amount_formatted": "₹5.10L", "date": "01 Sep 2026", "payment_status": "Pending", "fulfillment_status": "Processing", "items_count": 210},
+    {"id": "ORD-1050", "customer_name": "Metro Cash & Carry Wholesale", "amount": 679008.0, "amount_formatted": "₹6.79L", "date": "02 Sep 2026", "payment_status": "Paid", "fulfillment_status": "Confirmed", "items_count": 390}
 ]
 
 MOCK_INVOICES = [
-    {"id": "INV-2048", "customer_name": "Acme Corporation", "amount": 240000.0, "amount_formatted": "₹2.4L", "issue_date": "02 Sep 2026", "due_date": "02 Oct 2026", "status": "Paid"},
-    {"id": "INV-2047", "customer_name": "Vertex Solutions", "amount": 267000.0, "amount_formatted": "₹2.67L", "issue_date": "15 Aug 2026", "due_date": "15 Sep 2026", "status": "Overdue"},
-    {"id": "INV-2046", "customer_name": "Nova Retail", "amount": 180000.0, "amount_formatted": "₹1.8L", "issue_date": "01 Sep 2026", "due_date": "01 Oct 2026", "status": "Paid"}
+    {"id": "INV-2048", "customer_name": "Reliance Retail Ventures Ltd", "amount": 486000.0, "amount_formatted": "₹4.86L", "issue_date": "28 Aug 2026", "due_date": "27 Sep 2026", "status": "Paid"},
+    {"id": "INV-2049", "customer_name": "Avenue Supermarts Ltd (DMart)", "amount": 509760.0, "amount_formatted": "₹5.10L", "issue_date": "01 Sep 2026", "due_date": "01 Oct 2026", "status": "Sent"},
+    {"id": "INV-2050", "customer_name": "Metro Cash & Carry Wholesale", "amount": 679008.0, "amount_formatted": "₹6.79L", "issue_date": "02 Sep 2026", "due_date": "02 Oct 2026", "status": "Paid"}
 ]
 
 MOCK_SOCIAL_POSTS = [
     {
         "id": "post-001",
-        "platform": "LinkedIn",
-        "title": "Wholesale Partner Program",
-        "content": "Scale your retail distribution network with automated multi-tier pricing and intelligent inventory management.",
-        "reach": 84200,
-        "likes": 6420,
-        "clicks": 1280,
-        "leads_generated": 126,
-        "qualified_leads": 48,
-        "conversions": 12,
-        "revenue_attributed": 840000.0,
+        "platform": "Instagram",
+        "title": "2-Minute Happiness: Fueling Monsoon Memories",
+        "content": "Rains, friends, and steaming bowls of Maggi! Keep your store shelves stocked with the all-time favorite snack. Order master cartons directly on the Nestlé B2B portal. 🍜💛",
+        "reach": 142800,
+        "likes": 6842,
+        "clicks": 8840,
+        "leads_generated": 186,
+        "qualified_leads": 88,
+        "conversions": 28,
+        "revenue_attributed": 1840000.0,
         "status": "Published"
     }
 ]
 
 MOCK_DOCUMENTS = [
-    {"id": "doc-001", "name": "Q2 Sales Report 2025.pdf", "category": "Report", "size": "3.8 MB", "uploaded_by": "Arjun Mehta", "uploaded_date": "05 Jul 2025", "status": "Indexed", "rag_indexed": True},
-    {"id": "doc-002", "name": "Enterprise Service Agreement Template.docx", "category": "Contract", "size": "1.2 MB", "uploaded_by": "Neha Patel", "uploaded_date": "12 Aug 2025", "status": "Indexed", "rag_indexed": True},
-    {"id": "doc-003", "name": "Supply Chain Master Policy 2025.pdf", "category": "Business Document", "size": "4.5 MB", "uploaded_by": "Vikram Rao", "uploaded_date": "19 Aug 2025", "status": "Indexed", "rag_indexed": True}
+    {"id": "doc-001", "name": "FSSAI Central Food Safety Audit Report 2025.pdf", "category": "Report", "size": "3.4 MB", "uploaded_by": "Aisha Khan", "uploaded_date": "05 Jul 2025", "status": "Indexed", "rag_indexed": True},
+    {"id": "doc-002", "name": "Reliance Retail Master Supply Agreement.pdf", "category": "Contract", "size": "2.8 MB", "uploaded_by": "Suresh Narayanan", "uploaded_date": "20 Mar 2025", "status": "Indexed", "rag_indexed": True},
+    {"id": "doc-003", "name": "National Dairy Union Procurement Agreement.pdf", "category": "Business Document", "size": "3.1 MB", "uploaded_by": "Sanjay Kumar", "uploaded_date": "15 Jan 2025", "status": "Indexed", "rag_indexed": True}
 ]
 
 MOCK_USERS = [
-    {"id": "user-1", "name": "Arjun Mehta", "email": "arjun@biznexus.in", "role": "Business Owner", "department": "Executive", "access_scope": "All Access", "status": "Active", "avatar": "AM"},
-    {"id": "user-2", "name": "Priya Shah", "email": "priya.shah@biznexus.in", "role": "Marketing Manager", "department": "Marketing", "access_scope": "Marketing + Leads", "status": "Active", "avatar": "PS"},
-    {"id": "user-3", "name": "Rahul Sharma", "email": "rahul.s@biznexus.in", "role": "Sales Executive", "department": "Sales", "access_scope": "Assigned CRM", "status": "Active", "avatar": "RS"},
-    {"id": "user-4", "name": "Neha Patel", "email": "neha.p@biznexus.in", "role": "Finance Manager", "department": "Finance", "access_scope": "Finance", "status": "Active", "avatar": "NP"},
-    {"id": "user-5", "name": "Vikram Rao", "email": "vikram.r@biznexus.in", "role": "Inventory Manager", "department": "Operations", "access_scope": "Inventory", "status": "Active", "avatar": "VR"},
-    {"id": "user-6", "name": "Aisha Khan", "email": "aisha.k@biznexus.in", "role": "Business Analyst", "department": "Strategy", "access_scope": "Analytics", "status": "Active", "avatar": "AK"}
+    {"id": "user-1", "name": "Suresh Narayanan", "email": "suresh@nestle.in", "role": "Business Owner", "department": "Executive", "access_scope": "All Access", "status": "Active", "avatar": "SN"},
+    {"id": "user-2", "name": "Rahul Sharma", "email": "rahul.sharma@nestle.in", "role": "Sales Manager", "department": "Sales & Modern Trade", "access_scope": "Sales + Modern Trade", "status": "Active", "avatar": "RS"},
+    {"id": "user-3", "name": "Priya Shah", "email": "priya.shah@nestle.in", "role": "Sales Executive", "department": "Key Accounts", "access_scope": "Assigned Accounts", "status": "Active", "avatar": "PS"},
+    {"id": "user-4", "name": "Kavya Nair", "email": "kavya.nair@nestle.in", "role": "Marketing Manager", "department": "Brand Marketing", "access_scope": "Campaigns + Social", "status": "Active", "avatar": "KN"},
+    {"id": "user-5", "name": "Vikram Rao", "email": "vikram.rao@nestle.in", "role": "Inventory Manager", "department": "Supply Chain", "access_scope": "Cold Chain & Warehousing", "status": "Active", "avatar": "VR"},
+    {"id": "user-6", "name": "Sanjay Kumar", "email": "sanjay.kumar@nestle.in", "role": "Purchase Manager", "department": "Agro Procurement", "access_scope": "Procurement & Suppliers", "status": "Active", "avatar": "SK"},
+    {"id": "user-7", "name": "Neha Patel", "email": "neha.patel@nestle.in", "role": "Finance Manager", "department": "Commercial Finance", "access_scope": "Financial Ledgers & Taxes", "status": "Active", "avatar": "NP"},
+    {"id": "user-8", "name": "Aisha Khan", "email": "aisha.khan@nestle.in", "role": "Business Analyst", "department": "Demand Analytics", "access_scope": "Analytics & Forecasting", "status": "Active", "avatar": "AK"}
 ]
 
 MOCK_USER_OVERRIDES = [

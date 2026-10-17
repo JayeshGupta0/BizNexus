@@ -27,7 +27,7 @@ const AI_INSIGHTS: Record<string, string> = {
 export default function LeadDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { hasModule, hasPermission } = useApp();
+  const { hasModule, hasPermission, leads, authMode } = useApp();
   const [convertOpen, setConvertOpen] = useState(false);
   const [quoteOpen, setQuoteOpen] = useState(false);
   const [activityOpen, setActivityOpen] = useState(false);
@@ -36,7 +36,7 @@ export default function LeadDetail() {
     <div className="p-6 text-center text-slate-500">Access denied</div>
   );
 
-  const lead = getLeadById(id ?? '');
+  const lead = leads.find(l => l.id === id) || (authMode === 'demo' ? getLeadById(id ?? '') : undefined);
   if (!lead) return (
     <div className="p-6 text-center">
       <p className="text-slate-500">Lead not found.</p>

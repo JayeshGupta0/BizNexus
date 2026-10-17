@@ -12,7 +12,7 @@ from app.models.schemas import (
 from app.services.mock_db import (
     MOCK_KPIS, MOCK_REVENUE_TREND, MOCK_LEADS, MOCK_CUSTOMERS,
     MOCK_PRODUCTS, MOCK_ORDERS, MOCK_INVOICES, MOCK_SOCIAL_POSTS,
-    MOCK_DOCUMENTS, MOCK_USERS, MOCK_USER_OVERRIDES
+    MOCK_DOCUMENTS, MOCK_USERS, MOCK_USER_OVERRIDES, MOCK_QUOTATIONS
 )
 from app.services.rag_service import rag_service
 
@@ -52,6 +52,11 @@ def get_customer_detail(customer_id: str):
         if cust["id"] == customer_id:
             return cust
     raise HTTPException(status_code=404, detail="Customer not found")
+
+# --- CRM: Quotations ---
+@router.get("/crm/quotations", response_model=List[Dict[str, Any]])
+def get_quotations():
+    return MOCK_QUOTATIONS
 
 # --- ERP: Orders & Products ---
 @router.get("/erp/orders", response_model=List[Dict[str, Any]])
